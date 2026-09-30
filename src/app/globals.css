@@ -4,74 +4,70 @@
 
 @layer base {
   :root {
-    --background: #0B0E14;
-    --foreground: #F8FAFC;
-    --surface: #141923;
-    --surface-border: #1F2937;
-    --muted: #1E2638;
-    --muted-foreground: #94A3B8;
-    --primary: #FFD200;
-    --primary-foreground: #0B0E14;
-    --border: #1F2937;
-    --input: #1F2937;
-    --ring: #FFD200;
+    --background: #FFFFFF;
+    --foreground: #0F172A;
+    --surface: #FFFFFF;
+    --surface-subtle: #F8FAFC;
+    --surface-border: #E2E8F0;
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B;
+    --primary: #2563EB;
+    --primary-foreground: #FFFFFF;
+    --brand-yellow: #FFD200;
+    --border: #E2E8F0;
+    --input: #E2E8F0;
+    --ring: #2563EB;
   }
 
   * {
-    @apply border-obsidian-border;
+    @apply border-slate-200;
   }
 
   body {
-    @apply bg-obsidian text-foreground antialiased selection:bg-brand selection:text-obsidian-950;
+    @apply bg-slate-50/50 text-slate-900 antialiased selection:bg-brand selection:text-slate-950;
     font-feature-settings: "rlig" 1, "calt" 1;
     min-height: 100vh;
   }
 }
 
 @layer utilities {
-  /* Subtle fintech background glow */
-  .bg-radial-hero {
-    background-radial: radial-gradient(circle at 50% 0%, rgba(255, 210, 0, 0.08) 0%, rgba(11, 14, 20, 0) 70%);
+  /* Ultra-clean SaaS Gradient Banners */
+  .bg-hero-blue-gradient {
+    background: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
   }
 
-  .bg-grid-subtle {
-    background-size: 32px 32px;
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  .bg-subtle-glow {
+    background: radial-gradient(circle at 50% 10%, rgba(37, 99, 235, 0.08) 0%, rgba(255, 210, 0, 0.04) 40%, transparent 70%);
   }
 
-  .glass-card {
-    background: rgba(20, 25, 35, 0.75);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  .glass-saas-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.04), 0 0 1px 1px rgba(255, 255, 255, 0.9);
   }
 
-  .glass-card-hover {
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .glass-card-hover:hover {
-    background: rgba(25, 32, 46, 0.85);
-    border-color: rgba(255, 210, 0, 0.3);
-    box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.7), 0 0 24px -6px rgba(255, 210, 0, 0.15);
+  .glass-saas-card:hover {
+    box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.08), 0 0 1px 1px rgba(255, 255, 255, 1);
   }
 
-  .yellow-neon-glow {
-    filter: drop-shadow(0 0 12px rgba(255, 210, 0, 0.5));
+  .phone-mockup-shadow {
+    box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.25), 0 18px 36px -18px rgba(37, 99, 235, 0.2);
   }
 }
 
-/* Custom modern scrollbars */
+/* Modern minimal scrollbars */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0E14;
+  background: #F8FAFC;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1F2937;
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #374151;
+  background: #94A3B8;
 }

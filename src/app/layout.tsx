@@ -75,8 +75,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${plusJakarta.variable} dark`}>
-      <body className="min-h-screen bg-obsidian text-foreground font-sans antialiased selection:bg-brand selection:text-obsidian-950">
+    <html lang="en" className={`${inter.variable} ${plusJakarta.variable}`}>
+      <body className="min-h-screen bg-[#FBFDFF] text-slate-900 font-sans antialiased selection:bg-brand selection:text-slate-950">
         {children}
       </body>
     </html>

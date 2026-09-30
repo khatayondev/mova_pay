@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ProgressGauge } from "@/components/ui/progress-gauge";
-import { AvatarGroup } from "@/components/ui/avatar-group";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import {
-  ArrowRight,
+  ArrowUpRight,
   ShieldCheck,
   Zap,
   Users,
@@ -16,325 +14,479 @@ import {
   TrendingUp,
   Receipt,
   Sparkles,
+  PiggyBank,
+  Store,
+  CreditCard,
+  Check,
+  Send,
+  ArrowRight,
+  Clock,
+  ChevronRight,
+  Lock,
 } from "lucide-react";
+import { MoMoCheckoutModal } from "@/components/modules/MoMoCheckoutModal";
 import { formatCurrency } from "@/lib/utils";
 
 export default function Home() {
-  const [splitAmount, setSplitAmount] = useState(850000);
-  const [totalGoal] = useState(1200000);
-  const [isSimulating, setIsSimulating] = useState(false);
-
-  const sampleMembers = [
-    {
-      id: "1",
-      name: "Brian Mukasa",
-      status: "paid" as const,
-      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
-    },
-    {
-      id: "2",
-      name: "Sarah Nalwanga",
-      status: "paid" as const,
-      avatarUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80",
-    },
-    {
-      id: "3",
-      name: "David Otim",
-      status: "paid" as const,
-      avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
-    },
-    {
-      id: "4",
-      name: "Grace Kigozi",
-      status: "pending" as const,
-      avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80",
-    },
-    {
-      id: "5",
-      name: "Aisha Nassolo",
-      status: "pending" as const,
-      initials: "AN",
-    },
-    {
-      id: "6",
-      name: "Timothy Kato",
-      status: "pending" as const,
-      initials: "TK",
-    },
-  ];
-
-  const handleSimulatePayment = () => {
-    setIsSimulating(true);
-    setTimeout(() => {
-      setSplitAmount((prev) => Math.min(prev + 150000, totalGoal));
-      setIsSimulating(false);
-    }, 1200);
-  };
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [splitAmount, setSplitAmount] = useState(600);
+  const totalGoal = 800;
 
   return (
-    <div className="relative min-h-screen bg-obsidian bg-grid-subtle overflow-x-hidden selection:bg-brand selection:text-obsidian-950">
-      {/* Background Hero Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[850px] h-[500px] bg-brand/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+    <div className="relative min-h-screen bg-[#FBFDFF] text-slate-900 overflow-x-hidden selection:bg-brand selection:text-slate-950 font-sans">
+      {/* Background Subtle Gradient Mesh */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[650px] bg-subtle-glow pointer-events-none -z-10" />
 
-      {/* Header / Brand Bar */}
-      <header className="sticky top-0 z-40 border-b border-obsidian-border/80 bg-obsidian/80 backdrop-blur-lg">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand font-black text-obsidian-950 shadow-brand-glow">
-              <span className="text-xl tracking-tighter">M</span>
+      {/* ========================================================================= */}
+      {/* 1. FLOATING SLEEK TOP NAVIGATION (MATCHING REFERENCE DESIGN)              */}
+      {/* ========================================================================= */}
+      <header className="sticky top-4 z-50 mx-auto max-w-6xl px-4">
+        <div className="flex h-14 items-center justify-between rounded-full border border-slate-200/80 bg-white/90 px-4 sm:px-6 shadow-sm backdrop-blur-xl transition-all">
+          {/* Left: Minimalist Logo */}
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-brand via-[#FFE875] to-brand text-slate-950 font-black shadow-sm">
+              <span className="text-base tracking-tighter">M</span>
             </div>
-            <div>
-              <span className="text-lg font-bold tracking-tight text-crisp font-display">
-                Mova
-              </span>
-              <span className="ml-2 hidden text-xs text-brand/90 font-medium sm:inline-block">
-                Powered by MTN MoMo
-              </span>
-            </div>
-          </div>
+            <span className="text-lg font-extrabold tracking-tight text-slate-900 font-display">
+              mova
+            </span>
+          </Link>
 
-          <div className="flex items-center gap-3">
-            <Badge variant="momo" size="sm" withPulseRing>
-              MTN MoMo Rail Active
-            </Badge>
-            <Button variant="outline" size="sm" className="hidden sm:inline-flex">
+          {/* Center: Rounded Pill Nav Menu */}
+          <nav className="hidden md:flex items-center gap-1 rounded-full border border-slate-100 bg-slate-50/80 p-1 text-xs font-semibold text-slate-600">
+            <Link
+              href="/"
+              className="rounded-full bg-white px-3.5 py-1 text-blue-600 shadow-sm transition-all"
+            >
+              • Home
+            </Link>
+            <Link
+              href="/split"
+              className="rounded-full px-3.5 py-1 hover:text-slate-900 transition-colors"
+            >
+              Split
+            </Link>
+            <Link
+              href="/fund"
+              className="rounded-full px-3.5 py-1 hover:text-slate-900 transition-colors"
+            >
+              Crowdfund
+            </Link>
+            <Link
+              href="/merchant"
+              className="rounded-full px-3.5 py-1 hover:text-slate-900 transition-colors"
+            >
+              Merchants
+            </Link>
+            <Link
+              href="/dashboard"
+              className="rounded-full px-3.5 py-1 hover:text-slate-900 transition-colors"
+            >
+              Dashboard
+            </Link>
+          </nav>
+
+          {/* Right: Pill CTA Button */}
+          <div className="flex items-center gap-2.5">
+            <Link href="/dashboard" className="hidden sm:inline-flex text-xs font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5">
               Sign In
-            </Button>
-            <Button size="sm" className="font-semibold shadow-brand-glow">
-              Get Started
-            </Button>
+            </Link>
+            <button
+              type="button"
+              onClick={() => setIsDemoModalOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-xs font-bold shadow-pill-glow transition-all active:scale-95"
+            >
+              <span>Test MoMo Rail</span>
+              <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5]" />
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <main className="container mx-auto px-4 py-16 sm:px-6 lg:py-24">
-        <div className="mx-auto max-w-4xl text-center">
-          {/* Pill Badge */}
-          <div className="inline-flex mb-6">
-            <Badge variant="brand" size="lg" withPulseRing>
-              <Sparkles className="h-3.5 w-3.5 text-brand mr-1" />
-              The Social Layer For Mobile Money
-            </Badge>
+      {/* ========================================================================= */}
+      {/* 2. HERO SECTION: 2-COLUMN LAYOUT WITH 3D PHONE MOCKUP (REFERENCE ACCURATE) */}
+      {/* ========================================================================= */}
+      <section className="relative mx-auto max-w-6xl px-4 pt-12 sm:pt-16 pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Left Column: Bold Headline & Call to Action */}
+          <div className="lg:col-span-6 space-y-6 text-left">
+            <div className="space-y-3">
+              <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-950 font-display leading-[1.1]">
+                Start Managing <br />
+                Your Finance <br />
+                <span className="text-slate-400 font-light">— With Our Tool</span>
+              </h1>
+
+              <p className="text-sm sm:text-base text-slate-600 max-w-md leading-relaxed pt-2">
+                Simplify your financial life. Our connected MoMo app makes managing group splits, campaign funding, and social payments effortless.
+              </p>
+            </div>
+
+            {/* Circular Arrow Button */}
+            <div className="pt-2 flex items-center gap-4">
+              <Link
+                href="/split"
+                className="inline-flex items-center gap-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white pl-5 pr-2 py-2 text-xs sm:text-sm font-bold shadow-pill-glow transition-all group"
+              >
+                <span>Get Started Free</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 group-hover:bg-white group-hover:text-blue-600 transition-colors">
+                  <ArrowUpRight className="h-4 w-4" />
+                </span>
+              </Link>
+            </div>
+
+            {/* Trust Avatar Stack */}
+            <div className="pt-4 flex items-center gap-3">
+              <div className="flex -space-x-2 overflow-hidden">
+                <img
+                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80"
+                  alt="User"
+                />
+                <img
+                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80"
+                  alt="User"
+                />
+                <img
+                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
+                  src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&q=80"
+                  alt="User"
+                />
+              </div>
+              <div className="text-left">
+                <span className="text-xs font-bold text-slate-900 block font-display">
+                  2.3M+
+                </span>
+                <span className="text-[11px] text-slate-500">
+                  Trusted by users across 140 countries
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Main Headline */}
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl font-display text-crisp">
-            Money moves <br />
-            <span className="relative inline-block text-brand yellow-neon-glow">
-              better together
-            </span>
-          </h1>
-
-          {/* Subtext */}
-          <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Eliminate WhatsApp screenshot chaos, endless chasing, and manual spreadsheets.
-            Mova turns <strong className="text-crisp font-semibold">MTN Mobile Money</strong> into an interconnected, real-time social payment engine.
-          </p>
-
-          {/* Primary Action Buttons */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              size="lg"
-              className="w-full sm:w-auto shadow-brand-glow text-base font-bold"
-              rightIcon={<ArrowRight className="h-5 w-5" />}
-              onClick={handleSimulatePayment}
-              isLoading={isSimulating}
+          {/* Right Column: Floating 3D Angled Phone Mockup */}
+          <div className="lg:col-span-6 relative flex justify-center py-6">
+            {/* Phone Container with Realistic 3D Tilt */}
+            <div
+              className="relative w-[280px] sm:w-[320px] rounded-[44px] bg-slate-950 p-3 shadow-phone-3d transition-transform duration-500 hover:rotate-0"
+              style={{
+                transform: "perspective(1200px) rotateY(-8deg) rotateX(8deg) rotate(-2deg)",
+              }}
             >
-              Simulate MoMo Split
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full sm:w-auto text-base"
-              leftIcon={<Smartphone className="h-5 w-5 text-brand" />}
-            >
-              View MoMo USSD Rails
-            </Button>
-          </div>
+              {/* Outer Phone Shell */}
+              <div className="relative rounded-[36px] bg-white overflow-hidden p-4 space-y-4 text-slate-900">
+                {/* Dynamic Island / Speaker */}
+                <div className="mx-auto h-4 w-24 rounded-full bg-slate-950" />
 
-          {/* Trust Metrics Bar */}
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs sm:text-sm text-muted-foreground border-y border-obsidian-border/60 py-4">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-brand" />
-              <span>Direct MoMo API Integration</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-brand" />
-              <span>Instant USSD Push Settlement</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-brand" />
-              <span>Zero WhatsApp Screenshots</span>
+                {/* In-app Header */}
+                <div className="flex justify-between items-center text-xs">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-semibold">Welcome back</span>
+                    <h4 className="font-bold text-slate-900">Gabriel Okello</h4>
+                  </div>
+                  <div className="h-7 w-7 rounded-full bg-brand flex items-center justify-center font-black text-slate-950 text-xs shadow-sm">
+                    G
+                  </div>
+                </div>
+
+                {/* In-app Card: Gradient Balance */}
+                <div className="rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-4 text-white shadow-md space-y-3">
+                  <div className="flex justify-between text-[11px] text-white/80">
+                    <span>MTN MoMo Linked</span>
+                    <span className="font-mono text-brand font-bold">● Active</span>
+                  </div>
+                  <div>
+                    <span className="text-2xl font-black font-display tracking-tight">
+                      GHS 4,850.15
+                    </span>
+                    <span className="text-[10px] text-white/70 block mt-0.5">
+                      Available Social Liquidity
+                    </span>
+                  </div>
+                </div>
+
+                {/* In-app Quick Actions */}
+                <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-semibold text-slate-600">
+                  <button
+                    type="button"
+                    onClick={() => setIsDemoModalOpen(true)}
+                    className="p-2 rounded-xl bg-slate-50 hover:bg-blue-50 hover:text-blue-600 transition-colors border border-slate-100 flex flex-col items-center gap-1"
+                  >
+                    <Send className="h-3.5 w-3.5 text-blue-600" />
+                    <span>Send</span>
+                  </button>
+                  <Link
+                    href="/split"
+                    className="p-2 rounded-xl bg-slate-50 hover:bg-blue-50 hover:text-blue-600 transition-colors border border-slate-100 flex flex-col items-center gap-1"
+                  >
+                    <Receipt className="h-3.5 w-3.5 text-brand" />
+                    <span>Split</span>
+                  </Link>
+                  <Link
+                    href="/fund"
+                    className="p-2 rounded-xl bg-slate-50 hover:bg-blue-50 hover:text-blue-600 transition-colors border border-slate-100 flex flex-col items-center gap-1"
+                  >
+                    <PiggyBank className="h-3.5 w-3.5 text-emerald-500" />
+                    <span>Fund</span>
+                  </Link>
+                </div>
+
+                {/* In-app Transactions List */}
+                <div className="space-y-2 pt-1">
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="font-bold text-slate-900">Recent Group Activity</span>
+                    <span className="text-blue-600 text-[10px] font-semibold">View all</span>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-lg bg-brand/20 flex items-center justify-center text-slate-950 font-bold text-[10px]">
+                          🏝️
+                        </div>
+                        <div className="text-left">
+                          <span className="font-bold text-slate-800 text-[11px] block">Weekend Trip to Ada</span>
+                          <span className="text-[9px] text-slate-400">4 members • Settled</span>
+                        </div>
+                      </div>
+                      <span className="font-mono font-bold text-slate-900 text-xs">
+                        -GHS 200
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-[10px]">
+                          🍲
+                        </div>
+                        <div className="text-left">
+                          <span className="font-bold text-slate-800 text-[11px] block">Ama Kitchen Lunch</span>
+                          <span className="text-[9px] text-slate-400">@amakitchen • Paid</span>
+                        </div>
+                      </div>
+                      <span className="font-mono font-bold text-slate-900 text-xs">
+                        -GHS 25
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Live UI Components Showcase & Interactive Pitch Card */}
-        <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Live Group Split Card */}
-          <div className="lg:col-span-7">
-            <Card className="glass-card border-brand/30 relative overflow-hidden shadow-card-elevated">
-              <div className="absolute top-0 right-0 p-4">
-                <Badge variant="success" size="sm" withPulseRing>
-                  Active Group
-                </Badge>
-              </div>
-
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2 text-xs font-semibold text-brand uppercase tracking-wider">
-                  <Receipt className="h-4 w-4" />
-                  Mova Split Engine
-                </div>
-                <CardTitle className="text-2xl font-bold mt-1">
-                  Entebbe Weekend Villa & BBQ
-                </CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  6 friends sharing accommodation and grocery costs via direct MoMo push.
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="space-y-6 pt-2">
-                {/* Metric Summary Bar */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-obsidian-900/90 border border-obsidian-border">
-                  <div>
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">
-                      Collected
-                    </span>
-                    <p className="text-xl font-bold text-brand font-display">
-                      {formatCurrency(splitAmount, "UGX")}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">
-                      Target
-                    </span>
-                    <p className="text-xl font-bold text-crisp font-display">
-                      {formatCurrency(totalGoal, "UGX")}
-                    </p>
-                  </div>
-                  <div className="col-span-2 sm:col-span-1 flex flex-col justify-center">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">
-                      Status
-                    </span>
-                    <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1 mt-0.5">
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      4 of 6 Settled
-                    </span>
-                  </div>
-                </div>
-
-                {/* Progress Gauges Showcase */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-semibold text-crisp">Live Settlement Gauge</span>
-                    <span className="text-brand font-bold">
-                      {Math.round((splitAmount / totalGoal) * 100)}% Funded
-                    </span>
-                  </div>
-                  <ProgressGauge
-                    value={splitAmount}
-                    max={totalGoal}
-                    size="lg"
-                    showPercent={false}
-                  />
-                </div>
-
-                {/* Avatar Group Component Demo */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-obsidian-border/70">
-                  <div>
-                    <span className="text-xs font-medium text-muted-foreground block mb-1">
-                      Split Participants (6 Members)
-                    </span>
-                    <AvatarGroup
-                      avatars={sampleMembers}
-                      maxVisible={4}
-                      size="md"
-                      showStatusRings
-                    />
-                  </div>
-
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    onClick={handleSimulatePayment}
-                    isLoading={isSimulating}
-                    leftIcon={<Zap className="h-4 w-4" />}
-                  >
-                    Send MoMo Prompt (+150k)
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+        {/* ========================================================================= */}
+        {/* GRAPHIC BANNER CARD WITH WATERMARK BACKDROP (MATCHING REFERENCE DESIGN)    */}
+        {/* ========================================================================= */}
+        <div className="relative mt-8 overflow-hidden rounded-3xl bg-hero-blue-gradient p-8 sm:p-12 text-white shadow-xl text-center space-y-4">
+          {/* Subtle Watermark Headline */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15 overflow-hidden">
+            <span className="text-5xl sm:text-8xl font-black font-display tracking-widest uppercase whitespace-nowrap text-white">
+              FINANCE MANAGEMENT • SOCIAL MOMO
+            </span>
           </div>
 
-          {/* Secondary Component Feature Showcase */}
-          <div className="lg:col-span-5 space-y-6">
-            {/* Circular Progress Gauge Card */}
-            <Card className="glass-card border-obsidian-border p-6 flex items-center justify-between gap-4">
-              <div>
-                <Badge variant="brand" size="sm" className="mb-2">
-                  Mova Fund
-                </Badge>
-                <h4 className="text-base font-bold text-crisp font-display">
-                  Community Solar Borehole
-                </h4>
-                <p className="text-xs text-muted-foreground mt-1 max-w-[200px]">
-                  Real-time circular progress gauge with live MoMo API webhooks.
-                </p>
-                <div className="mt-4 flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-emerald-400" />
-                  <span className="text-xs text-emerald-400 font-semibold">
-                    +UGX 450,000 today
+          <div className="relative z-10 max-w-2xl mx-auto space-y-3">
+            <h3 className="text-xl sm:text-2xl font-bold font-display">
+              Partnering with top tier brands to revolutionize financial services.
+            </h3>
+            <p className="text-xs sm:text-sm text-blue-100">
+              Direct API integrations and settlement rails across leading African mobile telecommunications networks.
+            </p>
+
+            {/* Partner Brand Badges */}
+            <div className="pt-4 flex flex-wrap items-center justify-center gap-4 sm:gap-8 opacity-90 text-xs font-bold font-mono">
+              <span className="bg-white/10 px-3.5 py-1.5 rounded-full border border-white/20">MTN Mobile Money</span>
+              <span className="bg-white/10 px-3.5 py-1.5 rounded-full border border-white/20">Telecel Cash</span>
+              <span className="bg-white/10 px-3.5 py-1.5 rounded-full border border-white/20">AirtelTigo</span>
+              <span className="bg-white/10 px-3.5 py-1.5 rounded-full border border-white/20">Bank-Grade 256bit</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 3. CENTER MANIFESTO STATEMENT WITH FLOATING 3D ICONS                      */}
+      {/* ========================================================================= */}
+      <section className="relative mx-auto max-w-4xl px-4 py-20 text-center space-y-6">
+        {/* Floating 3D Micro-Pill 1: Piggy Bank */}
+        <div className="hidden sm:flex absolute left-8 top-12 items-center justify-center h-12 w-12 rounded-2xl bg-pink-50 border border-pink-100 shadow-sm text-2xl animate-bounce duration-1000">
+          🐷
+        </div>
+
+        {/* Floating 3D Micro-Pill 2: Alarm Clock */}
+        <div className="hidden sm:flex absolute right-12 top-20 items-center justify-center h-12 w-12 rounded-2xl bg-emerald-50 border border-emerald-100 shadow-sm text-2xl">
+          ⏰
+        </div>
+
+        {/* Floating 3D Micro-Pill 3: Blue Coin */}
+        <div className="hidden sm:flex absolute left-16 bottom-8 items-center justify-center h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 shadow-sm text-2xl">
+          💳
+        </div>
+
+        {/* Floating 3D Micro-Pill 4: Gift Box */}
+        <div className="hidden sm:flex absolute right-16 bottom-12 items-center justify-center h-12 w-12 rounded-2xl bg-amber-50 border border-amber-100 shadow-sm text-2xl">
+          🎁
+        </div>
+
+        {/* Main Central Headline */}
+        <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 font-display leading-[1.2] max-w-2xl mx-auto">
+          Our app is an <br />
+          <span className="text-blue-600">all-in-one solution</span> for <br />
+          managing your money <br />
+          and financial goals.
+        </h2>
+
+        <p className="text-sm sm:text-base text-slate-600 max-w-lg mx-auto leading-relaxed">
+          Experience the peace of mind that comes with having your group expenses and campaigns under complete, transparent control.
+        </p>
+
+        {/* CTA */}
+        <div className="pt-2">
+          <Link
+            href="/fund"
+            className="inline-flex items-center gap-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white pl-5 pr-2 py-2 text-xs sm:text-sm font-bold shadow-pill-glow transition-all group"
+          >
+            <span>Explore Community Goals</span>
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 group-hover:bg-white group-hover:text-blue-600 transition-colors">
+              <ArrowUpRight className="h-4 w-4" />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 4. "EXPLORE OUR STANDOUT FEATURES" CARDS GRID (REFERENCE ACCURATE)        */}
+      {/* ========================================================================= */}
+      <section className="relative mx-auto max-w-6xl px-4 py-16 space-y-10">
+        <div className="text-center space-y-2">
+          <span className="inline-flex rounded-full bg-blue-50 border border-blue-100 px-3.5 py-1 text-xs font-bold text-blue-600">
+            Key Features
+          </span>
+          <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-950 font-display">
+            Explore Our Standout Features
+          </h3>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto">
+            Everything you need to move money smoothly across friendships, teams, and campus commerce.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Card 1: Virtual Card & Expense Tracking */}
+          <div className="rounded-3xl border border-slate-200/80 bg-white p-8 shadow-saas-card hover:shadow-saas-hover transition-all flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              {/* Graphic Mockup of Debit Card */}
+              <div className="mx-auto w-full max-w-[280px] rounded-2xl bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-900 p-5 text-white shadow-md space-y-4">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-bold tracking-wider">Mova Card</span>
+                  <div className="h-5 w-8 rounded-md bg-white/20 flex items-center justify-center text-[10px] font-mono">
+                    MoMo
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <span className="text-xl font-bold font-display tracking-tight">
+                    GHS 2,736.15
+                  </span>
+                  <span className="text-[10px] text-white/70 font-mono block mt-1">
+                    •••• 5318
                   </span>
                 </div>
               </div>
 
-              <ProgressGauge
-                value={splitAmount}
-                max={totalGoal}
-                variant="circular"
-                size="md"
-                subLabel="GOAL"
-              />
-            </Card>
+              <div className="space-y-1.5 pt-2">
+                <h4 className="text-lg font-bold text-slate-900 font-display">
+                  Expense & Group Tracking
+                </h4>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Record and categorize group expenses, contributions, and settlements automatically with live telecom confirmation logs.
+                </p>
+              </div>
+            </div>
 
-            {/* Design Token Spec Card */}
-            <Card className="glass-card border-obsidian-border p-6">
-              <h4 className="text-xs font-semibold text-brand uppercase tracking-wider mb-3">
-                Token & Primitive Specifications
-              </h4>
-              <div className="space-y-3 text-xs">
-                <div className="flex items-center justify-between pb-2 border-b border-obsidian-border/60">
-                  <span className="text-muted-foreground">Hero Brand Yellow</span>
+            <Link href="/split" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700">
+              <span>Try Split Engine</span>
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          {/* Card 2: Smart Savings & Crowdfund Goal */}
+          <div className="rounded-3xl border border-slate-200/80 bg-white p-8 shadow-saas-card hover:shadow-saas-hover transition-all flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              {/* Goal Mockup Pill */}
+              <div className="mx-auto w-full max-w-[280px] rounded-2xl border border-slate-100 bg-slate-50/80 p-4 shadow-sm space-y-2">
+                <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="h-3 w-3 rounded-full bg-brand shadow-brand-glow" />
-                    <code className="text-crisp font-mono">#FFD200</code>
+                    <span className="text-base">🥖</span>
+                    <div>
+                      <span className="font-bold text-slate-900 text-xs block">Sarah's Bakery</span>
+                      <span className="text-[10px] text-slate-400">Accra Community Goal</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs font-bold text-slate-900 block font-mono">GHS 12,500</span>
+                    <span className="text-[10px] text-emerald-600 font-semibold">+GHS 1,500</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between pb-2 border-b border-obsidian-border/60">
-                  <span className="text-muted-foreground">Obsidian Canvas</span>
-                  <div className="flex items-center gap-2">
-                    <span className="h-3 w-3 rounded-full bg-obsidian border border-obsidian-border" />
-                    <code className="text-crisp font-mono">#0B0E14</code>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between pb-2 border-b border-obsidian-border/60">
-                  <span className="text-muted-foreground">Elevated Cards</span>
-                  <div className="flex items-center gap-2">
-                    <span className="h-3 w-3 rounded-full bg-obsidian-800 border border-obsidian-border" />
-                    <code className="text-crisp font-mono">#141923</code>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Typography</span>
-                  <span className="text-crisp font-semibold">Inter & Plus Jakarta Sans</span>
+
+                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div className="bg-brand h-full rounded-full w-[83%]" />
                 </div>
               </div>
-            </Card>
+
+              <div className="space-y-1.5 pt-2">
+                <h4 className="text-lg font-bold text-slate-900 font-display">
+                  Smart Savings & Crowdfunding Goals
+                </h4>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Set specific community goals and launch transparent crowdfunding without overseas banking delays or currency conversion losses.
+                </p>
+              </div>
+            </div>
+
+            <Link href="/fund/sarah-bakery" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700">
+              <span>View Sarah's Goal</span>
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
-      </main>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 5. FOOTER: CLEAN MINIMALIST SAAS FOOTER                                  */}
+      {/* ========================================================================= */}
+      <footer className="border-t border-slate-200/80 bg-white py-12 text-center text-xs text-slate-500">
+        <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-brand font-black text-slate-950 text-xs">
+              M
+            </div>
+            <span className="font-bold text-slate-900">Mova</span>
+            <span>— Money moves better together.</span>
+          </div>
+
+          <div className="flex items-center gap-6 font-medium">
+            <Link href="/split" className="hover:text-slate-900">Group Split</Link>
+            <Link href="/fund" className="hover:text-slate-900">Crowdfund</Link>
+            <Link href="/merchant" className="hover:text-slate-900">Merchant Hub</Link>
+            <Link href="/dashboard" className="hover:text-slate-900">Dashboard</Link>
+          </div>
+        </div>
+      </footer>
+
+      {/* Interactive MoMo Modal */}
+      <MoMoCheckoutModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+        details={{
+          recipientName: "Weekend Trip to Ada",
+          recipientHandle: "@sadick",
+          recipientPhone: "055 491 8832",
+          amount: 200,
+          currency: "GHS",
+          purpose: "Interactive MoMo Push Simulation",
+        }}
+      />
     </div>
   );
 }
