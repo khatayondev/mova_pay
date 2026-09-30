@@ -822,6 +822,114 @@ export default function Home() {
                 MTN MoMo RAIL (Underlying Settlement & Liquidity Engine)
               </div>
             </div>
+
+            {/* Technical API Inspector */}
+            <div className="mt-8 pt-6 border-t border-slate-800 space-y-3">
+              <div className="flex items-center justify-between text-[11px] font-mono">
+                <span className="text-slate-400 flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  MTN MoMo API Integration Contract (Sandbox Ready)
+                </span>
+                <span className="text-blue-400 bg-blue-950/60 px-2.5 py-0.5 rounded-full border border-blue-800">
+                  POST /collection/v1_0/requesttopay
+                </span>
+              </div>
+              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto text-left leading-relaxed">
+                <span className="text-slate-500">// Header Parameters</span><br />
+                <span className="text-purple-400">X-Reference-Id</span>: <span className="text-emerald-400">"c7e2b6a9-4d81-4ef3-bf72-89b31d04ec92"</span><br />
+                <span className="text-purple-400">X-Target-Environment</span>: <span className="text-emerald-400">"sandbox"</span><br />
+                <span className="text-purple-400">Ocp-Apim-Subscription-Key</span>: <span className="text-emerald-400">"8f2a...momo_key"</span><br />
+                <br />
+                <span className="text-slate-500">// Payload Dispatched by Mova Group Engine</span><br />
+                &#123;<br />
+                &nbsp;&nbsp;<span className="text-blue-400">"amount"</span>: <span className="text-amber-300">"200.00"</span>,<br />
+                &nbsp;&nbsp;<span className="text-blue-400">"currency"</span>: <span className="text-emerald-400">"GHS"</span>,<br />
+                &nbsp;&nbsp;<span className="text-blue-400">"externalId"</span>: <span className="text-emerald-400">"MOVA-SPLIT-WEEKEND-ADA-04"</span>,<br />
+                &nbsp;&nbsp;<span className="text-blue-400">"payer"</span>: &#123; <span className="text-blue-400">"partyIdType"</span>: <span className="text-emerald-400">"MSISDN"</span>, <span className="text-blue-400">"partyId"</span>: <span className="text-emerald-400">"233244123456"</span> &#125;,<br />
+                &nbsp;&nbsp;<span className="text-blue-400">"payerMessage"</span>: <span className="text-emerald-400">"Weekend Trip Contribution via Mova"</span>,<br />
+                &nbsp;&nbsp;<span className="text-blue-400">"payeeNote"</span>: <span className="text-emerald-400">"Settled to @sadick Group Treasury"</span><br />
+                &#125;
+              </div>
+            </div>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* FUTURE EXPANSION ROADMAP (DOCUMENT SECTION 12 COMPLIANCE)                 */}
+          {/* ========================================================================= */}
+          <div className="mt-20 pt-16 border-t border-slate-800 max-w-6xl mx-auto space-y-8">
+            <div className="text-center space-y-2">
+              <span className="text-[10px] uppercase font-bold text-blue-400 tracking-widest">
+                Strategic Horizon
+              </span>
+              <h3 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
+                Beyond the MVP: Future Ecosystem Expansion
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+                Once the core payment and collection layer is established, Mova unlocks deep financial integrations across the MoMo ecosystem.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-sm">Verified Merchant IDs</span>
+                  <span className="text-[9px] uppercase font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-800">Ready</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  Cryptographically verified campus vendor badges linked to telecom national ID registries.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-sm">Automated Micro-Receipts</span>
+                  <span className="text-[9px] uppercase font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-800">Ready</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  Instant shareable WhatsApp proof-of-purchase eliminating dispute resolution headaches.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-sm">Community Susu & Savings</span>
+                  <span className="text-[9px] uppercase font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-800">Phase 2</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  Rotating informal savings groups (Susu/Chama) with automated MoMo direct debit schedules.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-sm">Fraud & Sim-Box Shield</span>
+                  <span className="text-[9px] uppercase font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-800">Phase 2</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  Heuristic velocity limits and biometric device binding to block impersonation scams.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-sm">Campus Loyalty & Cashback</span>
+                  <span className="text-[9px] uppercase font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-800">Phase 2</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  Automated points and student cashback discounts on every 5th meal ordered through Mova.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-sm">Alternative Credit Scoring</span>
+                  <span className="text-[9px] uppercase font-bold text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded-full border border-purple-800">Ecosystem</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  Transaction velocity and group settlement punctuality score unlocking MoMo micro-loans.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
