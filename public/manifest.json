@@ -1,0 +1,9 @@
+{
+  "name": "Mova",
+  "short_name": "Mova",
+  "description": "Money Moves Better Together — Connected MoMo Social Payments",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0E14",
+  "theme_color": "#FFD200"
+}
