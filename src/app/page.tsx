@@ -7,7 +7,6 @@ import {
   TrendingUp,
   Sparkles,
   ArrowUpRight,
-  ArrowDownLeft,
   ChevronDown,
   Check,
   Send,
@@ -25,1068 +24,1335 @@ import {
   Lock,
   MessageCircle,
   HelpCircle,
-  ChevronRight,
-  Award,
-  Layers,
+  Radio,
+  Copy,
+  Flame,
+  Star,
+  Zap,
+  Gift,
+  Coins,
   FileSpreadsheet,
   Image as ImageIcon,
+  Sliders,
+  Clock,
+  CheckCheck,
+  Home as HomeIcon,
+  Handshake,
+  Linkedin,
+  Instagram,
+  Youtube,
+  Globe,
 } from "lucide-react";
 import { MoMoCheckoutModal } from "@/components/modules/MoMoCheckoutModal";
-import { formatCurrency } from "@/lib/utils";
 
 export default function Home() {
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"PAY" | "SPLIT" | "FUND">("SPLIT");
+  const [activeTab, setActiveTab] = useState<"SPLIT" | "PAY" | "FUND" | "MERCHANT">("SPLIT");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // Group split simulation
-  const [splitContributors, setSplitContributors] = useState([
-    { name: "Gabriel Okello", handle: "@gabriel", amount: 200, status: "PAID" },
-    { name: "Sadick Abubakar", handle: "@sadick", amount: 200, status: "PAID" },
-    { name: "Abena Mensah", handle: "@abena_m", amount: 200, status: "PAID" },
-    { name: "Kofi Owusu", handle: "@kofi_tech", amount: 200, status: "AWAITING_PIN" },
-  ]);
+  // Audience Switcher (Criba style)
+  const [audience, setAudience] = useState<"groups" | "creators">("groups");
 
-  const totalSplitBudget = 800;
-  const collectedSplit = splitContributors
-    .filter((c) => c.status === "PAID")
-    .reduce((sum, c) => sum + c.amount, 0);
+  // Interactive Calculator State (Criba style)
+  const [calcAmount, setCalcAmount] = useState(1200);
+  const [calcMembers, setCalcMembers] = useState(6);
+
+  // Waitlist State
+  const [desiredHandle, setDesiredHandle] = useState("");
+  const [contactInfo, setContactInfo] = useState("");
+  const [selectedRole, setSelectedRole] = useState("Personal & Friend Groups");
+  const [isJoiningWaitlist, setIsJoiningWaitlist] = useState(false);
+  const [waitlistSuccess, setWaitlistSuccess] = useState<null | {
+    handle: string;
+    queueNumber: number;
+    contact: string;
+    role: string;
+  }>(null);
+  const [copiedReferral, setCopiedReferral] = useState(false);
+
+  const cleanHandle = (val: string) => {
+    return val.toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 20);
+  };
+
+  const handleWaitlistSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!desiredHandle && !contactInfo) return;
+
+    setIsJoiningWaitlist(true);
+    setTimeout(() => {
+      const generatedQueue = 1428 + Math.floor(Math.random() * 5) + 1;
+      setWaitlistSuccess({
+        handle: desiredHandle ? `@${cleanHandle(desiredHandle)}` : "@user",
+        queueNumber: generatedQueue,
+        contact: contactInfo || "your phone/email",
+        role: selectedRole,
+      });
+      setIsJoiningWaitlist(false);
+    }, 700);
+  };
+
+  const copyReferralLink = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(`https://mova.app/?ref=${desiredHandle || "vip"}`);
+      setCopiedReferral(true);
+      setTimeout(() => setCopiedReferral(false), 2000);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#C7D9FE] via-[#E2EDFF] to-[#BED4FE] py-4 sm:py-8 px-2 sm:px-6 flex flex-col items-center justify-center font-sans antialiased selection:bg-blue-600 selection:text-white">
+    <div className="w-full min-h-screen bg-white text-slate-950 font-sans antialiased selection:bg-[#FFD200] selection:text-slate-950 overflow-x-hidden">
+      
       {/* ========================================================================= */}
-      {/* MAIN WHITE CANVAS CARD CONTAINER (EXACT SPEC COMPLIANT)                   */}
+      {/* TOP NAVBAR: FULL SCREEN WIDTH                                             */}
       {/* ========================================================================= */}
-      <div className="relative w-full max-w-[1240px] rounded-[32px] sm:rounded-[44px] bg-white border border-white/60 shadow-[0_30px_90px_-20px_rgba(37,99,235,0.25)] overflow-hidden">
-        
-        {/* ========================================================================= */}
-        {/* TOP NAVBAR                                                               */}
-        {/* ========================================================================= */}
-        <header className="flex h-20 items-center justify-between px-6 sm:px-12 pt-2 border-b border-slate-100">
+      <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/95 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto flex h-20 items-center justify-between px-6 sm:px-12">
+          {/* Logo with bold glyph mark */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-950 text-white font-extrabold text-sm tracking-tighter">
-              <span className="font-serif italic text-base">§</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 text-[#FFD200] font-extrabold text-sm tracking-tighter shadow-sm">
+              <span className="font-serif italic text-lg">§</span>
             </div>
-            <span className="text-xl font-extrabold tracking-tight text-slate-900 font-display">
+            <span className="text-2xl font-black tracking-tight text-slate-950 font-display">
               Mova
             </span>
           </Link>
 
+          {/* Centered Navigation */}
           <nav className="hidden md:flex items-center gap-8 text-[13px] font-semibold text-slate-600">
-            <Link href="#problem" className="hover:text-slate-950 transition-colors">
-              The Problem
+            <Link href="#features" className="hover:text-slate-950 transition-colors">
+              Features
+            </Link>
+            <Link href="#calculator" className="hover:text-slate-950 transition-colors">
+              Friction Calculator
             </Link>
             <Link href="#products" className="hover:text-slate-950 transition-colors">
-              3 Core Products
+              Products
             </Link>
-            <Link href="#identity" className="hover:text-slate-950 transition-colors">
-              Digital Identity
+            <Link href="/live" className="inline-flex items-center gap-1.5 text-amber-700 hover:text-amber-800 font-bold transition-colors">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
+              <span>TikTok Live & Social</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-900 border border-amber-300">Soon</span>
             </Link>
-            <Link href="#merchants" className="hover:text-slate-950 transition-colors">
-              Merchants
+            <Link href="#why-mova" className="hover:text-slate-950 transition-colors">
+              Why Mova
             </Link>
-            <Link href="#competition" className="hover:text-slate-950 transition-colors">
-              MoMo Lab Tracks
+            <Link href="#faq" className="hover:text-slate-950 transition-colors">
+              FAQ
             </Link>
           </nav>
 
+          {/* Right Action: Pill Button */}
           <div className="flex items-center gap-3">
-            <Link
-              href="/split"
-              className="hidden sm:inline-flex rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
-            >
-              Split Bill
-            </Link>
             <button
               type="button"
               onClick={() => setIsDemoModalOpen(true)}
-              className="rounded-full bg-[#0D62FE] hover:bg-blue-700 text-white px-5 py-2.5 text-xs font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95"
+              className="hidden sm:inline-flex rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
             >
               Test MoMo Rail
             </button>
+            <a
+              href="#waitlist"
+              className="rounded-full bg-[#FFD200] hover:bg-[#FACC15] text-slate-950 px-5 py-2.5 text-xs font-black shadow-md shadow-amber-400/30 transition-all active:scale-95 flex items-center gap-1.5"
+            >
+              <span>Join Waitlist</span>
+            </a>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {/* ========================================================================= */}
-        {/* HERO SECTION (EXACT HERO DESIGN FROM REFERENCE)                           */}
-        {/* ========================================================================= */}
-        <section className="pt-10 sm:pt-14 pb-8 text-center px-4 max-w-4xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-50/80 px-3.5 py-1 text-[11px] font-medium text-slate-700 shadow-sm">
-            <span className="text-xs">✧</span>
-            <span>MoMo Fintech Lab Competition Entry</span>
+      {/* ========================================================================= */}
+      {/* HERO SECTION: FULL SCREEN WIDTH                                           */}
+      {/* ========================================================================= */}
+      <div className="w-full bg-white relative overflow-hidden pt-10 sm:pt-14 pb-8">
+        <div className="max-w-5xl mx-auto text-center px-4 space-y-5">
+          
+          {/* Criba-Style Audience Switcher Toggle */}
+          <div className="flex justify-center">
+            <div className="inline-flex rounded-full bg-slate-100 p-1 font-semibold text-xs border border-slate-200 shadow-inner">
+              <button
+                type="button"
+                onClick={() => setAudience("groups")}
+                className={`px-4 sm:px-5 py-2 rounded-full transition-all ${
+                  audience === "groups"
+                    ? "bg-[#FFD200] text-slate-950 font-bold shadow-sm"
+                    : "text-slate-600 hover:text-slate-950"
+                }`}
+              >
+                For Friends & Groups
+              </button>
+              <button
+                type="button"
+                onClick={() => setAudience("creators")}
+                className={`px-4 sm:px-5 py-2 rounded-full transition-all ${
+                  audience === "creators"
+                    ? "bg-[#FFD200] text-slate-950 font-bold shadow-sm"
+                    : "text-slate-600 hover:text-slate-950"
+                }`}
+              >
+                For Creators & Vendors
+              </button>
+            </div>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-[68px] font-black tracking-tight text-slate-950 font-display leading-[1.05] uppercase">
-            MONEY MOVES <br />
-            <span className="bg-gradient-to-r from-slate-950 via-[#0F3580] to-[#0D62FE] bg-clip-text text-transparent">
-              BETTER TOGETHER
-            </span>
-          </h1>
+          {/* Subtle Tagline Pill */}
+          <div className="flex justify-center">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/90 bg-amber-50 px-3.5 py-1 text-xs font-semibold text-amber-900 shadow-sm">
+              <span className="text-amber-500 text-xs">✧</span>
+              <span>
+                {audience === "groups"
+                  ? "The Connected Social MoMo Layer"
+                  : "Live Streaming & In-Chat Commerce Rails"}
+              </span>
+            </div>
+          </div>
 
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto leading-relaxed font-normal pt-1">
-            Mova connects people, groups, communities, and businesses to MoMo — making it simple to request, split, collect, and raise money without spreadsheets, screenshots, and manual chasing.
+          {/* Hero Headline: MONEY MOVES BETTER TOGETHER */}
+          {audience === "groups" ? (
+            <h1 className="text-4xl sm:text-6xl md:text-[72px] font-black tracking-tight text-slate-950 font-display leading-[1.05] uppercase">
+              MONEY MOVES <br />
+              <span className="bg-gradient-to-r from-slate-950 via-[#854D0E] to-[#CA8A04] bg-clip-text text-transparent">
+                BETTER TOGETHER
+              </span>
+            </h1>
+          ) : (
+            <h1 className="text-4xl sm:text-6xl md:text-[72px] font-black tracking-tight text-slate-950 font-display leading-[1.05] uppercase">
+              GET PAID DIRECTLY <br />
+              <span className="bg-gradient-to-r from-slate-950 via-[#854D0E] to-[#CA8A04] bg-clip-text text-transparent">
+                WHERE YOU CREATE
+              </span>
+            </h1>
+          )}
+
+          {/* Subtext */}
+          <p className="text-xs sm:text-base text-slate-500 max-w-2xl mx-auto leading-relaxed font-normal pt-1">
+            {audience === "groups"
+              ? "Mova connects people and groups to MTN MoMo — making it simple to request, split bills, collect contributions, and manage money without spreadsheets, screenshots, or awkward debt reminders."
+              : "Accept instant MoMo tips on TikTok Live, split group costs inside Telegram chats, and sell lunch pre-orders with zero fake screenshot scams."}
           </p>
 
+          {/* Primary CTA: Exact Button Replica with Left Arrow Circle */}
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#waitlist"
+              className="inline-flex items-center gap-3 rounded-full bg-[#FFD200] hover:bg-[#FACC15] text-slate-950 pl-2 pr-6 py-2.5 text-xs sm:text-sm font-black shadow-lg shadow-amber-500/25 transition-all active:scale-95 group"
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-950 text-[#FFD200] shadow-sm transition-transform group-hover:translate-x-0.5">
+                <ArrowRight className="h-3.5 w-3.5 stroke-[3]" />
+              </span>
+              <span>Join Waitlist</span>
+            </a>
+
             <button
               type="button"
               onClick={() => setIsDemoModalOpen(true)}
-              className="inline-flex items-center gap-3 rounded-full bg-[#0D62FE] hover:bg-blue-700 text-white pl-2 pr-6 py-2 text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/30 transition-all active:scale-95 group"
+              className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800 px-5 py-2.5 text-xs font-bold transition-colors"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#0D62FE] shadow-sm transition-transform group-hover:translate-x-0.5">
-                <ArrowRight className="h-3.5 w-3.5 stroke-[3]" />
-              </span>
-              <span>Try Live Demo</span>
+              Test MoMo USSD Prompt
             </button>
-            <Link
-              href="/split"
-              className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 transition-colors"
-            >
-              Create a Group Split
-            </Link>
           </div>
-        </section>
+
+          <p className="text-[11px] font-medium text-slate-400">
+            Joining is free. No separate wallet to fund. Settles directly to your MTN MoMo.
+          </p>
+
+          {/* Inline @Handle Reservation Box */}
+          <div className="pt-3 max-w-md mx-auto">
+            {waitlistSuccess ? (
+              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-left space-y-2 animate-in fade-in duration-300">
+                <div className="flex items-center justify-between text-xs font-bold text-amber-900">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    Handle Reserved: {waitlistSuccess.handle}
+                  </span>
+                  <span className="font-mono text-[10px] bg-amber-200 px-2 py-0.5 rounded-full">
+                    #{waitlistSuccess.queueNumber}
+                  </span>
+                </div>
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={copyReferralLink}
+                    className="flex-1 py-1.5 px-3 rounded-xl bg-slate-950 text-white text-[11px] font-bold flex items-center justify-center gap-1.5"
+                  >
+                    {copiedReferral ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copiedReferral ? "Copied!" : "Share Link"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setWaitlistSuccess(null)}
+                    className="py-1.5 px-3 rounded-xl border border-slate-300 text-slate-700 text-[11px] font-semibold"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleWaitlistSubmit} className="flex items-center gap-2 p-1.5 rounded-full bg-slate-50 border border-slate-200/90 shadow-sm">
+                <div className="flex-1 relative flex items-center pl-3">
+                  <span className="text-slate-400 text-xs font-bold mr-1">@</span>
+                  <input
+                    type="text"
+                    required
+                    placeholder="claim-your-handle"
+                    value={desiredHandle}
+                    onChange={(e) => setDesiredHandle(cleanHandle(e.target.value))}
+                    className="w-full bg-transparent text-xs font-bold text-slate-900 placeholder-slate-400 focus:outline-none"
+                  />
+                </div>
+                <input
+                  type="text"
+                  required
+                  placeholder="Phone or Email"
+                  value={contactInfo}
+                  onChange={(e) => setContactInfo(e.target.value)}
+                  className="w-36 bg-white px-3 py-1.5 rounded-full border border-slate-200 text-[11px] text-slate-900 placeholder-slate-400 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={isJoiningWaitlist}
+                  className="rounded-full bg-slate-950 hover:bg-slate-800 text-[#FFD200] px-4 py-2 text-xs font-bold shrink-0 transition-all"
+                >
+                  {isJoiningWaitlist ? "..." : "Claim"}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
 
         {/* ========================================================================= */}
-        {/* HERO GRAPHIC STAGE: VERTICAL FLUTED BLUE PILLARS & PHONE STAGE             */}
+        {/* HERO GRAPHICS STAGE: YELLOW RIBBED PILLARS, PHONE & 4 FLOATING CARDS      */}
         {/* ========================================================================= */}
-        <div className="relative mt-2 pt-10 pb-0 px-4 overflow-hidden flex flex-col items-center justify-end min-h-[460px] sm:min-h-[520px]">
-          {/* Vertical Ribbed Backdrop */}
-          <div className="absolute inset-x-0 bottom-0 top-12 flex justify-between pointer-events-none -z-10 opacity-90 px-2 sm:px-6">
-            {Array.from({ length: 24 }).map((_, i) => (
+        <div className="relative mt-2 pt-14 pb-8 px-4 overflow-hidden flex flex-col items-center justify-end min-h-[520px] sm:min-h-[580px]">
+          {/* Vertical Ribbed Backdrop in Warm Yellow / Gold extending full width */}
+          <div className="absolute inset-x-0 bottom-0 top-6 flex justify-between pointer-events-none -z-10 opacity-90 px-4 sm:px-12">
+            {Array.from({ length: 28 }).map((_, i) => (
               <div
                 key={i}
-                className="w-full mx-[2px] sm:mx-1 rounded-t-xl bg-gradient-to-t from-[#2563EB] via-[#60A5FA]/60 to-transparent transition-all"
+                className="w-full mx-[2px] sm:mx-1 rounded-t-xl transition-all"
                 style={{
                   height: "100%",
-                  opacity: 0.15 + (i % 2 === 0 ? 0.25 : 0.45),
-                  background: `linear-gradient(to top, #1D4ED8 0%, #3B82F6 40%, rgba(147, 197, 253, 0.4) 75%, transparent 100%)`,
+                  opacity: 0.16 + (i % 2 === 0 ? 0.28 : 0.55),
+                  background: `linear-gradient(to top, #CA8A04 0%, #EAB308 38%, rgba(253, 224, 71, 0.45) 75%, transparent 100%)`,
                 }}
               />
             ))}
           </div>
 
-          <div className="relative w-full max-w-[820px] flex items-end justify-center">
-            {/* Trend icon */}
-            <div className="absolute -top-6 sm:top-2 left-4 sm:left-14 z-20">
-              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-[#0D62FE] text-white shadow-xl shadow-blue-600/40 border-[3px] border-white">
-                <TrendingUp className="h-7 w-7 sm:h-8 sm:w-8 stroke-[2.5]" />
+          {/* Central Composition: Phone & Surrounding Floating Cards */}
+          <div className="relative w-full max-w-[860px] flex items-center justify-center">
+            
+            {/* FLOATING ITEM 1: CIRCULAR UP-TRENDING ICON (TOP LEFT) */}
+            <div className="absolute -top-6 left-6 sm:left-14 z-30 animate-bounce duration-1000 hidden xs:flex">
+              <div className="p-1 rounded-full bg-white shadow-xl">
+                <div className="h-12 w-12 rounded-full bg-[#FFD200] text-slate-950 flex items-center justify-center shadow-inner font-black">
+                  <TrendingUp className="w-6 h-6 stroke-[2.5]" />
+                </div>
               </div>
             </div>
 
-            {/* Budget Scores Donut Card */}
-            <div className="absolute bottom-10 sm:bottom-16 left-0 sm:left-4 z-20 w-[240px] sm:w-[280px] rounded-2xl bg-white/95 p-4 shadow-[0_20px_40px_-10px_rgba(15,23,42,0.18)] border border-slate-100 backdrop-blur-md">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs">
-                <span className="font-bold text-slate-900">Budget Scores</span>
-                <span className="text-[11px] text-slate-400 flex items-center gap-0.5">
-                  Weekend Trip <ChevronDown className="h-3 w-3" />
+            {/* FLOATING ITEM 2: BUDGET / SPLIT SCORES DONUT CARD (BOTTOM LEFT) */}
+            <div className="absolute bottom-6 -left-2 sm:left-4 z-30 w-56 sm:w-64 p-4 rounded-3xl bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-2xl space-y-3 hidden sm:block">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-900">
+                <span>Budget Scores</span>
+                <span className="text-[10px] text-slate-400 font-medium flex items-center gap-0.5">
+                  This Month <ChevronDown className="w-3 h-3" />
                 </span>
               </div>
-              <div className="mt-3 flex items-center gap-3">
-                <div className="relative h-16 w-16 shrink-0">
-                  <svg viewBox="0 0 36 36" className="h-full w-full rotate-[-90deg]">
-                    <circle cx="18" cy="18" r="14" fill="transparent" stroke="#E2E8F0" strokeWidth="6" />
-                    <circle cx="18" cy="18" r="14" fill="transparent" stroke="#0D62FE" strokeWidth="6" strokeDasharray="45 100" strokeDashoffset="0" />
-                    <circle cx="18" cy="18" r="14" fill="transparent" stroke="#06B6D4" strokeWidth="6" strokeDasharray="25 100" strokeDashoffset="-45" />
-                    <circle cx="18" cy="18" r="14" fill="transparent" stroke="#3B82F6" strokeWidth="6" strokeDasharray="15 100" strokeDashoffset="-70" />
-                    <circle cx="18" cy="18" r="14" fill="transparent" stroke="#93C5FD" strokeWidth="6" strokeDasharray="15 100" strokeDashoffset="-85" />
+
+              {/* Donut Chart with Slices */}
+              <div className="flex items-center gap-3">
+                <div className="relative w-16 h-16 shrink-0">
+                  <svg viewBox="0 0 36 36" className="w-16 h-16 transform -rotate-90">
+                    <circle cx="18" cy="18" r="14" fill="none" stroke="#F1F5F9" strokeWidth="5" />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="14"
+                      fill="none"
+                      stroke="#FFD200"
+                      strokeWidth="5"
+                      strokeDasharray="52.1 100"
+                      strokeDashoffset="0"
+                    />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="14"
+                      fill="none"
+                      stroke="#D97706"
+                      strokeWidth="5"
+                      strokeDasharray="22.8 100"
+                      strokeDashoffset="-52.1"
+                    />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="14"
+                      fill="none"
+                      stroke="#0F172A"
+                      strokeWidth="5"
+                      strokeDasharray="13.5 100"
+                      strokeDashoffset="-74.9"
+                    />
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="14"
+                      fill="none"
+                      stroke="#10B981"
+                      strokeWidth="5"
+                      strokeDasharray="11.6 100"
+                      strokeDashoffset="-88.4"
+                    />
                   </svg>
                 </div>
-                <div className="flex-1 space-y-1 text-[10px] font-medium text-slate-600">
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[#0D62FE]" /> Food & BBQ</span>
-                    <span className="font-bold text-slate-900 font-mono">52.1%</span>
+
+                {/* Legend list */}
+                <div className="space-y-1 text-[10px] text-slate-600 font-medium leading-tight">
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-[#FFD200]" /> Needs</span>
+                    <strong className="text-slate-900 font-mono">52.1%</strong>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[#06B6D4]" /> Villa Stay</span>
-                    <span className="font-bold text-slate-900 font-mono">22.8%</span>
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-600" /> Wants</span>
+                    <strong className="text-slate-900 font-mono">22.8%</strong>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[#3B82F6]" /> Transport</span>
-                    <span className="font-bold text-slate-900 font-mono">13.9%</span>
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-slate-950" /> Splits</span>
+                    <strong className="text-slate-900 font-mono">13.5%</strong>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Savings</span>
+                    <strong className="text-slate-900 font-mono">11.6%</strong>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Central Phone */}
-            <div className="relative z-10 w-[240px] sm:w-[280px] rounded-t-[44px] bg-slate-950 p-2 sm:p-2.5 pb-0 shadow-[0_30px_60px_-15px_rgba(15,23,42,0.4)] border-4 border-b-0 border-slate-800">
-              <div className="rounded-t-[36px] bg-white overflow-hidden p-3.5 sm:p-4 pb-10 space-y-3.5 text-slate-900 min-h-[360px] sm:min-h-[420px]">
-                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500 px-1">
+            {/* CENTRAL PHONE MOCKUP */}
+            <div className="relative z-20 w-full max-w-[280px] sm:max-w-[310px] rounded-t-[44px] border-[6px] border-b-0 border-slate-950 bg-slate-950 p-2.5 pt-3.5 shadow-2xl shadow-amber-900/30">
+              {/* Dynamic Island Notch */}
+              <div className="mx-auto mb-2.5 h-4 w-24 rounded-full bg-slate-900 flex items-center justify-between px-2">
+                <div className="h-2 w-2 rounded-full bg-slate-800" />
+                <div className="h-1.5 w-8 rounded-full bg-slate-800" />
+              </div>
+
+              {/* Phone Display Content */}
+              <div className="rounded-t-[34px] bg-slate-50 p-3.5 space-y-3 text-slate-900 min-h-[410px]">
+                {/* Status Bar */}
+                <div className="flex items-center justify-between text-[10px] font-bold text-slate-400 px-1">
                   <span>9:41</span>
-                  <div className="h-3.5 w-16 rounded-full bg-slate-950" />
-                  <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 rounded-full bg-slate-400" />
-                    <div className="h-2 w-3 rounded-sm bg-slate-400" />
+                  <span>Translate</span>
+                  <div className="flex items-center gap-1 text-[9px]">
+                    <span>5G</span>
+                    <span className="h-2 w-3 rounded-sm border border-slate-400 inline-block" />
                   </div>
                 </div>
 
-                <div className="text-center pt-1">
-                  <span className="text-xs font-bold text-slate-800 font-display">Mova Social Rail</span>
-                </div>
-
-                <div className="rounded-2xl bg-gradient-to-br from-[#0D62FE] via-[#1E40AF] to-[#0A2563] p-4 text-white shadow-md space-y-3 relative overflow-hidden">
-                  <div className="space-y-0.5">
-                    <span className="text-[10px] text-white/70">MTN MoMo Balance</span>
-                    <div className="text-xl font-black font-display tracking-tight">
-                      GHS 10,000
+                {/* Yellow Gradient Credit / MoMo Card */}
+                <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#FFD200] via-[#FACC15] to-[#EAB308] text-slate-950 shadow-md space-y-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-[9px] font-bold uppercase tracking-wider text-slate-800/80">MoMo Card</div>
+                      <div className="text-base font-black tracking-tight">10,000$ / GHS</div>
                     </div>
+                    <span className="text-[10px] font-black tracking-widest text-slate-900">VISA</span>
                   </div>
-                  <div className="pt-2 flex justify-between items-end text-[10px] font-mono text-white/80">
-                    <span className="font-bold tracking-widest text-xs">MoMo</span>
-                    <span>@gabriel</span>
+
+                  <div className="pt-2 flex justify-between items-center text-[10px] font-mono text-slate-900">
+                    <span>•••• 4028</span>
+                    <span className="font-bold">08/29</span>
                   </div>
                 </div>
 
-                <div className="pt-1 text-center space-y-1">
-                  <div className="text-2xl font-black font-display text-slate-900 tracking-tight">
-                    GHS 600.00
-                  </div>
-                  <span className="text-[10px] text-slate-400 font-mono block">
-                    Weekend Trip Collected (75%)
-                  </span>
-                  <div className="pt-2 h-10 w-full flex items-end justify-center">
-                    <svg viewBox="0 0 100 25" className="w-full h-full text-blue-600 overflow-visible">
-                      <path d="M0 20 Q 25 5, 50 15 T 100 5 L 100 25 L 0 25 Z" fill="rgba(13, 98, 254, 0.12)" />
-                      <path d="M0 20 Q 25 5, 50 15 T 100 5" fill="none" stroke="#0D62FE" strokeWidth="2.5" />
+                {/* Sub balance & mini chart */}
+                <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-sm space-y-1">
+                  <div className="text-[10px] text-slate-400 font-medium">Recent Activity</div>
+                  <div className="text-lg font-black text-slate-950 font-display">GHS 450.00</div>
+                  <div className="h-8 w-full pt-1">
+                    <svg viewBox="0 0 100 25" className="w-full h-full stroke-amber-500 fill-amber-100/50">
+                      <path d="M0,20 Q20,5 40,15 T70,8 T100,12 L100,25 L0,25 Z" />
+                      <path d="M0,20 Q20,5 40,15 T70,8 T100,12" fill="none" strokeWidth="2" />
                     </svg>
                   </div>
                 </div>
+
+                {/* Quick 1-tap trigger */}
+                <button
+                  type="button"
+                  onClick={() => setIsDemoModalOpen(true)}
+                  className="w-full py-2 rounded-xl bg-[#FFD200] hover:bg-[#FACC15] text-slate-950 font-black text-xs shadow-sm transition-all"
+                >
+                  ⚡ Pay with MoMo
+                </button>
               </div>
             </div>
 
-            {/* Received / Spent Pills */}
-            <div className="absolute top-4 sm:top-8 right-0 sm:right-6 z-20 flex flex-col gap-2">
-              <div className="flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-2.5 shadow-[0_12px_30px_-5px_rgba(15,23,42,0.15)] border border-slate-100 backdrop-blur-md">
-                <span className="text-[11px] font-semibold text-slate-500">Collected</span>
-                <span className="text-xs font-black text-emerald-600 font-mono flex items-center gap-0.5">
-                  ↑ GHS 600
+            {/* FLOATING ITEM 3: AMOUNT RECEIVED & SPENT PILLS (TOP RIGHT) */}
+            <div className="absolute top-4 right-0 sm:right-6 z-30 space-y-2 hidden sm:block">
+              <div className="px-3.5 py-2 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl flex items-center gap-2 text-xs">
+                <span className="text-[11px] text-slate-500 font-medium">Amount Received:</span>
+                <span className="font-extrabold text-emerald-600 flex items-center gap-0.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> + $965
                 </span>
               </div>
-              <div className="flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-2.5 shadow-[0_12px_30px_-5px_rgba(15,23,42,0.15)] border border-slate-100 backdrop-blur-md">
-                <span className="text-[11px] font-semibold text-slate-500">Awaiting PIN</span>
-                <span className="text-xs font-black text-amber-500 font-mono flex items-center gap-0.5">
-                  ⏳ GHS 200
+
+              <div className="px-3.5 py-2 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl flex items-center gap-2 text-xs">
+                <span className="text-[11px] text-slate-500 font-medium">Amount Spent:</span>
+                <span className="font-extrabold text-rose-600 flex items-center gap-0.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-rose-500" /> - $950
                 </span>
               </div>
             </div>
 
-            {/* Amount Saved / Target */}
-            <div className="absolute bottom-10 sm:bottom-16 right-0 sm:right-6 z-20 w-[200px] sm:w-[220px] rounded-2xl bg-white/95 p-4 shadow-[0_20px_40px_-10px_rgba(15,23,42,0.18)] border border-slate-100 backdrop-blur-md space-y-1">
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
-                Target Budget
-              </span>
-              <div className="flex items-center justify-between">
-                <span className="text-lg font-black text-slate-900 font-display">
-                  GHS 800.00
+            {/* FLOATING ITEM 4: AMOUNT SAVED CARD (BOTTOM RIGHT) */}
+            <div className="absolute bottom-8 right-0 sm:right-6 z-30 p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200 shadow-xl text-xs space-y-1 hidden sm:block">
+              <div className="text-[10px] text-slate-400 font-medium">Amount Saved</div>
+              <div className="flex items-center gap-2.5">
+                <span className="text-base font-black text-slate-950">$734.50</span>
+                <span className="px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                  +4.2% ↗
                 </span>
-                <span className="rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold">
-                  75% Settled
-                </span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Bottom watermark */}
+          <div className="pt-4 text-center">
+            <span className="font-display font-extrabold text-sm tracking-widest text-slate-400/80 uppercase">
+              mova space
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 2: THE RELATABLE PROBLEM (CRIBA TONE: "SHOULDN'T FEEL LIKE THIS") */}
+      {/* ========================================================================= */}
+      <div id="features" className="w-full py-20 px-6 sm:px-12 bg-slate-50/70 border-t border-slate-100">
+        <div className="max-w-4xl mx-auto text-center space-y-3">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-950 font-display tracking-tight">
+            Managing money together <br />
+            <span className="text-amber-600">shouldn’t feel like a second job.</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto leading-relaxed">
+            Most friend groups and event organizers run into the exact same painful issues, over and over, before everyone’s share is settled.
+          </p>
+        </div>
+
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-3 hover:shadow-md transition-shadow">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+              <ImageIcon className="h-5 w-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900 font-display">
+              The Screenshot Graveyard
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              WhatsApp groups flooded with 30 unverified SMS screenshots that the organizer has to cross-reference and tally row by row.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-3 hover:shadow-md transition-shadow">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+              <Smartphone className="h-5 w-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900 font-display">
+              The 10-Digit Gamble
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              One mistyped digit on <span className="font-mono text-slate-700">024 XXX XXXX</span> and your contribution is sent to a stranger with zero instant refund.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm space-y-3 hover:shadow-md transition-shadow">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700">
+              <MessageCircle className="h-5 w-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900 font-display">
+              The Debt Collector Cringe
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Nobody likes sending <em>"Bro, did you see my MoMo request yet?"</em> five times in a week to their own friends or coworkers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 2B: INTERACTIVE FRICTION CALCULATOR (CRIBA "TRY IT YOURSELF" STYLE)*/}
+      {/* ========================================================================= */}
+      <div id="calculator" className="w-full py-20 px-6 sm:px-12 bg-amber-50/40 border-t border-amber-200/50">
+        <div className="max-w-5xl mx-auto space-y-10">
+          <div className="max-w-2xl mx-auto text-center space-y-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold bg-[#FFD200] text-slate-950">
+              Try It Yourself
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 font-display">
+              See what chasing group money actually costs.
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+              Same group expense, two very different realities. Slide to your group budget and see how much stress Mova removes.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-4xl mx-auto">
+            {/* Slider Column */}
+            <div className="lg:col-span-6 p-7 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-5">
+              <div>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Group Total Budget</label>
+                <div className="text-3xl font-black text-slate-950 font-display mt-1">
+                  GHS {calcAmount.toLocaleString()}
+                </div>
+                <input
+                  type="range"
+                  min="200"
+                  max="5000"
+                  step="100"
+                  value={calcAmount}
+                  onChange={(e) => setCalcAmount(parseInt(e.target.value))}
+                  className="w-full mt-3 accent-[#EAB308] cursor-pointer"
+                />
+                <div className="flex justify-between text-[11px] text-slate-400 font-mono mt-1">
+                  <span>GHS 200</span>
+                  <span>GHS 5,000</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Group Members</label>
+                <div className="flex items-center gap-3 mt-2">
+                  {[3, 4, 6, 8, 10].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setCalcMembers(num)}
+                      className={`px-3 py-1.5 rounded-xl font-bold text-xs transition-all ${
+                        calcMembers === num
+                          ? "bg-slate-950 text-[#FFD200] shadow-sm"
+                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      }`}
+                    >
+                      {num} people
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[11px] text-slate-500 mt-2">
+                  Each person pays: <strong className="text-slate-900 font-mono">GHS {Math.round(calcAmount / calcMembers)}</strong>
+                </p>
+              </div>
+            </div>
+
+            {/* Comparison Cards Column */}
+            <div className="lg:col-span-6 space-y-4">
+              {/* WhatsApp Route */}
+              <div className="p-5 rounded-2xl bg-white border border-rose-100 shadow-sm space-y-2">
+                <div className="flex justify-between items-center text-xs font-bold text-rose-600">
+                  <span className="flex items-center gap-1.5"><Clock className="w-4 h-4" /> The WhatsApp & MoMo Way</span>
+                  <span className="text-slate-400">Takes ~3 days</span>
+                </div>
+                <ul className="text-xs text-slate-600 space-y-1.5 pt-1">
+                  <li className="flex items-center gap-2">
+                    <span className="text-rose-500 font-bold">•</span>
+                    <span>15+ awkward reminder messages sent in group chat</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-rose-500 font-bold">•</span>
+                    <span>{calcMembers} unverified screenshots to manually match</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-rose-500 font-bold">•</span>
+                    <span>High risk of 1 mistyped phone number transfer</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Mova Route */}
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-emerald-50/40 border border-amber-300 shadow-sm space-y-2">
+                <div className="flex justify-between items-center text-xs font-bold text-slate-950">
+                  <span className="flex items-center gap-1.5 text-emerald-800">
+                    <CheckCheck className="w-4 h-4 text-emerald-600" /> With Mova
+                  </span>
+                  <span className="text-emerald-700 font-bold">Takes ~90 seconds</span>
+                </div>
+                <ul className="text-xs text-slate-700 space-y-1.5 pt-1">
+                  <li className="flex items-center gap-2">
+                    <span className="text-emerald-600 font-bold">✓</span>
+                    <span>1 shareable link: friends tap and confirm MoMo PIN</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-emerald-600 font-bold">✓</span>
+                    <span>Automatic check-off: real-time live progress meter</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-emerald-600 font-bold">✓</span>
+                    <span>Zero manual math or awkward debt collection</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* ========================================================================= */}
-        {/* PART 1: THE PROBLEM SECTION (DOCUMENT SECTION 2 COMPLIANCE)               */}
-        {/* ========================================================================= */}
-        <section id="problem" className="py-20 px-6 sm:px-12 bg-slate-50/60 border-t border-slate-100">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <span className="inline-flex rounded-full bg-rose-50 border border-rose-100 px-3.5 py-1 text-xs font-bold text-rose-600">
-              The Everyday Struggle
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-950 font-display tracking-tight">
-              Payments made moving money easy. <br />
-              <span className="text-rose-600">Managing money together is still chaotic.</span>
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              When people organize a birthday, wedding, funeral, trip, or campus project, they still rely on fragmented WhatsApp threads, repeated MoMo numbers, and screenshot chasing.
-            </p>
+      {/* ========================================================================= */}
+      {/* SECTION 3: THE CORE MOVA PRODUCTS                                         */}
+      {/* ========================================================================= */}
+      <div id="products" className="w-full py-20 px-6 sm:px-12 bg-white">
+        <div className="max-w-4xl mx-auto text-center space-y-3">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-950 font-display tracking-tight">
+            Four Connected Products. <br />
+            <span className="text-amber-600">One Unified MoMo Social Layer.</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">
+            Everything you need to send, split, collect, and sell money socially in Ghana.
+          </p>
+
+          {/* Product Switcher Tabs in Yellow & Slate */}
+          <div className="pt-4 flex flex-wrap justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab("SPLIT")}
+              className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
+                activeTab === "SPLIT"
+                  ? "bg-[#FFD200] text-slate-950 shadow-md shadow-amber-400/30"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              Mova Split (Groups)
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("PAY")}
+              className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
+                activeTab === "PAY"
+                  ? "bg-[#FFD200] text-slate-950 shadow-md shadow-amber-400/30"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              Mova Pay (@Handles)
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("FUND")}
+              className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
+                activeTab === "FUND"
+                  ? "bg-[#FFD200] text-slate-950 shadow-md shadow-amber-400/30"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              Mova Fund (Causes)
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab("MERCHANT")}
+              className={`px-5 py-2 rounded-full text-xs font-bold transition-all ${
+                activeTab === "MERCHANT"
+                  ? "bg-[#FFD200] text-slate-950 shadow-md shadow-amber-400/30"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              }`}
+            >
+              Mova for Merchants
+            </button>
           </div>
+        </div>
 
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* The Disconnected WhatsApp Way */}
-            <div className="rounded-3xl border border-rose-200/80 bg-rose-50/30 p-6 sm:p-8 space-y-6">
-              <div className="flex items-center justify-between pb-3 border-b border-rose-100">
-                <div className="flex items-center gap-2">
-                  <XCircle className="h-5 w-5 text-rose-500" />
-                  <h4 className="text-base font-bold text-slate-900 font-display">The WhatsApp Chaos</h4>
-                </div>
-                <span className="text-[11px] font-bold uppercase text-rose-600 bg-rose-100/60 px-2.5 py-0.5 rounded-full">
-                  Before Mova
+        {/* Active Product Showcase */}
+        <div className="mt-12 max-w-5xl mx-auto">
+          {activeTab === "SPLIT" && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center p-8 rounded-3xl bg-amber-50/40 border border-amber-200/60">
+              <div className="md:col-span-7 space-y-4">
+                <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">
+                  For Roommates & Friends
                 </span>
-              </div>
-
-              <div className="space-y-3 font-mono text-xs">
-                <div className="p-3 rounded-2xl bg-white border border-rose-100 space-y-1 text-slate-600">
-                  <span className="text-[10px] text-slate-400 block font-sans">Kofi (10:14 AM)</span>
-                  <p>Guys, send your GHS 200 for Ada to my number: 0244123456</p>
-                </div>
-                <div className="p-3 rounded-2xl bg-white border border-rose-100 space-y-1 text-slate-600">
-                  <span className="text-[10px] text-slate-400 block font-sans">Abena (11:02 AM)</span>
-                  <p>Sent! Here is the screenshot 📸 [IMG_2026.png]</p>
-                </div>
-                <div className="p-3 rounded-2xl bg-white border border-rose-100 space-y-1 text-slate-600">
-                  <span className="text-[10px] text-slate-400 block font-sans">Kofi (3:45 PM)</span>
-                  <p>Who sent the GHS 200 with ref "payment"? I can't reconcile my balance 😩</p>
-                </div>
-              </div>
-
-              <div className="space-y-2 text-xs text-rose-900 font-medium">
-                <div className="flex items-center gap-2"><XCircle className="h-4 w-4 text-rose-500 shrink-0" /> Shared spreadsheets that get out of date</div>
-                <div className="flex items-center gap-2"><XCircle className="h-4 w-4 text-rose-500 shrink-0" /> One stressed organizer chasing everyone's money</div>
-                <div className="flex items-center gap-2"><XCircle className="h-4 w-4 text-rose-500 shrink-0" /> Fraudulent and duplicate payment screenshots</div>
-              </div>
-            </div>
-
-            {/* The Connected Mova Way */}
-            <div className="rounded-3xl border border-blue-200/80 bg-blue-50/30 p-6 sm:p-8 space-y-6">
-              <div className="flex items-center justify-between pb-3 border-b border-blue-100">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-blue-600" />
-                  <h4 className="text-base font-bold text-slate-900 font-display">The Mova Connected Rail</h4>
-                </div>
-                <span className="text-[11px] font-bold uppercase text-blue-600 bg-blue-100/60 px-2.5 py-0.5 rounded-full">
-                  With Mova
-                </span>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-white border border-blue-100 shadow-sm space-y-3">
-                <div className="flex justify-between items-center text-xs">
-                  <div>
-                    <span className="font-bold text-slate-900 text-sm block">Weekend Trip to Ada</span>
-                    <span className="text-[10px] text-slate-500">4 members • GHS 200/person</span>
-                  </div>
-                  <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
-                    GHS 600 / 800
-                  </span>
-                </div>
-
-                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div className="bg-blue-600 h-full rounded-full w-[75%]" />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-[11px] font-mono pt-1">
-                  <div className="flex items-center gap-1 text-emerald-600"><Check className="h-3 w-3" /> @gabriel: GHS 200 (Paid)</div>
-                  <div className="flex items-center gap-1 text-emerald-600"><Check className="h-3 w-3" /> @sadick: GHS 200 (Paid)</div>
-                  <div className="flex items-center gap-1 text-emerald-600"><Check className="h-3 w-3" /> @abena_m: GHS 200 (Paid)</div>
-                  <div className="flex items-center gap-1 text-amber-600">⏳ @kofi_tech: GHS 200 (PIN sent)</div>
-                </div>
-              </div>
-
-              <div className="space-y-2 text-xs text-blue-950 font-medium">
-                <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" /> Zero manual calculations or repeated MoMo numbers</div>
-                <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" /> Instant USSD push prompt directly to each phone</div>
-                <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-blue-600 shrink-0" /> Real-time automatic tracking: who paid and who hasn't</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* PART 2: THE THREE CORE PRODUCTS (SECTION 5 COMPLIANCE)                    */}
-        {/* ========================================================================= */}
-        <section id="products" className="py-20 px-6 sm:px-12 bg-white">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <span className="inline-flex rounded-full bg-blue-50 border border-blue-100 px-3.5 py-1 text-xs font-bold text-blue-600">
-              Core Architecture
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-950 font-display tracking-tight">
-              Three Powerful Products. <br />
-              <span className="text-blue-600">One Unified MoMo Rail.</span>
-            </h2>
-            <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto">
-              Whether requesting money individually, splitting bills in a group, or crowdfunding a community goal — Mova coordinates the social layer around MoMo.
-            </p>
-          </div>
-
-          <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* 1. Mova Pay */}
-            <div className="rounded-3xl border border-slate-200/80 bg-slate-50/50 p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all">
-              <div className="space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-md">
-                  <Send className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">Direct Requests</span>
-                  <h3 className="text-xl font-bold text-slate-900 font-display">Mova Pay</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Request money from another person without exchanging MoMo numbers.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 bg-white p-3.5 space-y-2 text-xs font-mono">
-                  <div className="text-[10px] text-slate-400 font-sans">Example Flow:</div>
-                  <div className="text-slate-900 font-bold">@Kofi → Requests GHS 150 from @Gabriel</div>
-                  <div className="p-2 rounded-xl bg-blue-50 text-blue-700 text-[11px] font-sans flex items-center justify-between">
-                    <span>"Kofi requested GHS 150"</span>
-                    <span className="font-bold underline cursor-pointer">Pay MoMo</span>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/pay" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700">
-                <span>Explore Mova Pay</span>
-                <ChevronRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-
-            {/* 2. Mova Split */}
-            <div className="rounded-3xl border-2 border-blue-500 bg-white p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-xl relative">
-              <div className="absolute -top-3 right-6 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-                Most Popular
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md">
-                  <Receipt className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider">Group Bills</span>
-                  <h3 className="text-xl font-bold text-slate-900 font-display">Mova Split</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Split bills, collect contributions, and automatically track who has paid.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5 space-y-2 text-xs">
-                  <div className="text-[10px] text-slate-400">Perfect for:</div>
-                  <div className="flex flex-wrap gap-1.5 text-[11px]">
-                    <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200">Weekend Trips</span>
-                    <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200">Birthdays</span>
-                    <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200">Weddings</span>
-                    <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200">School Projects</span>
-                    <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200">Rent & Utilities</span>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/split" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700">
-                <span>Start Group Split</span>
-                <ChevronRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-
-            {/* 3. Mova Fund */}
-            <div className="rounded-3xl border border-slate-200/80 bg-slate-50/50 p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:shadow-lg transition-all">
-              <div className="space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-md">
-                  <PiggyBank className="h-6 w-6" />
-                </div>
-                <div className="space-y-1">
-                  <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Fundraising</span>
-                  <h3 className="text-xl font-bold text-slate-900 font-display">Mova Fund</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Create a financial goal, invite contributors, and raise funds transparently through MoMo.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 bg-white p-3.5 space-y-2 text-xs">
-                  <div className="text-[10px] text-slate-400">Live Campaign Example:</div>
-                  <div className="font-bold text-slate-900">Sarah's Artisan Bakery</div>
-                  <div className="text-emerald-600 font-bold font-mono">GHS 12,500 of GHS 15,000 (127 backers)</div>
-                </div>
-              </div>
-
-              <Link href="/fund" className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700">
-                <span>Explore Campaigns</span>
-                <ChevronRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* HOW MOVA WORKS: 3-STEP FLOW (DOCUMENT SECTION 3)                          */}
-          {/* ========================================================================= */}
-          <div className="mt-20 pt-16 border-t border-slate-100 max-w-5xl mx-auto">
-            <div className="text-center space-y-2 pb-10">
-              <span className="inline-flex rounded-full bg-blue-50 border border-blue-100 px-3.5 py-1 text-xs font-bold text-blue-600">
-                Simple 3-Step Flow
-              </span>
-              <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-950 font-display">
-                How Mova Turns Chaos into 1-Click Payments
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
-                From organizing a wedding to raising money for a project, moving money together has never been this seamless.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Step 1 */}
-              <div className="rounded-3xl border border-slate-200 bg-slate-50/60 p-6 space-y-4 relative">
-                <div className="flex items-center justify-between">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-white font-extrabold text-xs">
-                    01
-                  </span>
-                  <span className="text-[10px] uppercase font-bold text-blue-600">Step 1</span>
-                </div>
-                <h4 className="text-base font-bold text-slate-900 font-display">Create a Goal</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Name your event and set your target budget. Choose from common goals:
-                </p>
-                <div className="space-y-1.5 text-xs font-mono">
-                  <div className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 flex justify-between">
-                    <span>Ama's Wedding</span>
-                    <strong className="text-blue-600">GHS 10,000</strong>
-                  </div>
-                  <div className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 flex justify-between">
-                    <span>Class 2020 Reunion</span>
-                    <strong className="text-blue-600">GHS 5,000</strong>
-                  </div>
-                  <div className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 flex justify-between">
-                    <span>Help Kofi Start Business</span>
-                    <strong className="text-blue-600">GHS 20,000</strong>
-                  </div>
-                  <div className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 flex justify-between">
-                    <span>Weekend Trip to Ada</span>
-                    <strong className="text-blue-600">GHS 3,000</strong>
-                  </div>
-                </div>
-              </div>
-
-              {/* Step 2 */}
-              <div className="rounded-3xl border border-slate-200 bg-slate-50/60 p-6 space-y-4 relative">
-                <div className="flex items-center justify-between">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500 text-white font-extrabold text-xs">
-                    02
-                  </span>
-                  <span className="text-[10px] uppercase font-bold text-amber-600">Step 2</span>
-                </div>
-                <h4 className="text-base font-bold text-slate-900 font-display">Invite People</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Share a smart link via WhatsApp, SMS, or social media. Each participant receives their personalized contribution request.
-                </p>
-                <div className="p-3.5 rounded-2xl bg-white border border-slate-200 space-y-2 text-xs">
-                  <div className="flex justify-between items-center font-bold text-slate-900">
-                    <span>Gabriel Okello</span>
-                    <span className="text-blue-600 font-mono">GHS 200</span>
-                  </div>
-                  <div className="text-[11px] text-slate-500">
-                    No copying numbers. No manual calculations.
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setIsDemoModalOpen(true)}
-                    className="w-full py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-[11px] transition-colors"
-                  >
-                    Pay with MoMo
-                  </button>
-                </div>
-              </div>
-
-              {/* Step 3 */}
-              <div className="rounded-3xl border border-slate-200 bg-slate-50/60 p-6 space-y-4 relative">
-                <div className="flex items-center justify-between">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-600 text-white font-extrabold text-xs">
-                    03
-                  </span>
-                  <span className="text-[10px] uppercase font-bold text-emerald-600">Step 3</span>
-                </div>
-                <h4 className="text-base font-bold text-slate-900 font-display">Everyone Pays via MoMo</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">
-                  Mova reconciles each incoming transaction in real-time. The organizer sees automated clarity:
-                </p>
-                <div className="p-3.5 rounded-2xl bg-white border border-slate-200 space-y-2 text-xs">
-                  <div className="flex justify-between items-center font-bold">
-                    <span className="text-slate-900">Live Progress</span>
-                    <span className="text-emerald-600 font-mono font-bold">72% funded</span>
-                  </div>
-                  <div className="text-slate-700 font-mono text-[11px] font-bold">
-                    GHS 3,600 / GHS 5,000
-                  </div>
-                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div className="bg-emerald-500 h-full rounded-full w-[72%]" />
-                  </div>
-                  <div className="text-[10px] text-slate-400 pt-1">
-                    ✓ Shows who paid • Who hasn't • Total collected • Remaining amount
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* PART 3: DIGITAL FINANCIAL IDENTITY (SECTION 6 COMPLIANCE)                 */}
-        {/* ========================================================================= */}
-        <section id="identity" className="py-20 px-6 sm:px-12 bg-slate-50/80 border-t border-slate-100">
-          <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-6 space-y-4 text-left">
-              <span className="inline-flex rounded-full bg-blue-50 border border-blue-100 px-3.5 py-1 text-xs font-bold text-blue-600">
-                Digital Financial Identity
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-950 font-display tracking-tight leading-[1.15]">
-                Say goodbye to <br />
-                <span className="line-through text-slate-400 font-light">024 XXX XXXX</span>. <br />
-                Say hello to <span className="text-blue-600 font-display">@handles</span>.
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Instead of copying phone numbers into WhatsApp groups and risking sending funds to the wrong SIM, Mova provides verified digital handles. Users verify who they are paying before typing their PIN.
-              </p>
-
-              <div className="pt-2 space-y-2 text-xs text-slate-700 font-medium">
-                <div className="flex items-center gap-2.5"><CheckCircle2 className="h-4 w-4 text-blue-600" /> <strong>@gabriel</strong> — Personal MoMo Tier 2 Verified</div>
-                <div className="flex items-center gap-2.5"><CheckCircle2 className="h-4 w-4 text-blue-600" /> <strong>@amakitchen</strong> — Verified Campus Food Merchant</div>
-                <div className="flex items-center gap-2.5"><CheckCircle2 className="h-4 w-4 text-blue-600" /> <strong>@htucsa</strong> — Student Association & Project Treasury</div>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6">
-              <div className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-xl space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-sm">
-                      AK
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1">
-                        <span className="font-bold text-slate-900 text-sm">Ama Kitchen & Grill</span>
-                        <CheckCircle2 className="h-3.5 w-3.5 text-blue-600 fill-blue-50" />
-                      </div>
-                      <span className="text-[11px] text-slate-400 font-mono">@amakitchen • Verified Till #910-234</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                    Active Merchant
-                  </span>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 space-y-2 text-xs">
-                  <span className="text-[10px] text-blue-600 uppercase font-bold tracking-wider">Payment Request Prompt</span>
-                  <p className="font-semibold text-slate-900 text-sm">
-                    "@amakitchen is requesting GHS 25 for Friday Lunch Pack."
-                  </p>
-                  <p className="text-[11px] text-slate-500">
-                    Recipient identity verified against MTN MoMo Telecom Registry.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsDemoModalOpen(true)}
-                  className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all"
-                >
-                  Simulate Verified MoMo Payment (GHS 25)
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* PART 4: MERCHANT & CAMPUS GROWTH ENGINE (SECTION 7 COMPLIANCE)            */}
-        {/* ========================================================================= */}
-        <section id="merchants" className="py-20 px-6 sm:px-12 bg-white border-t border-slate-100">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <span className="inline-flex rounded-full bg-emerald-50 border border-emerald-100 px-3.5 py-1 text-xs font-bold text-emerald-600">
-              Merchant Opportunity
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-950 font-display tracking-tight">
-              Empowering Small Merchants & Campus Vendors
-            </h2>
-            <p className="text-sm sm:text-base text-slate-500 max-w-xl mx-auto">
-              Connecting merchant payments to group purchasing, countertop QR codes, and automated customer order history.
-            </p>
-          </div>
-
-          <div className="mt-14 max-w-5xl mx-auto rounded-3xl border border-slate-200 bg-slate-50/50 p-6 sm:p-10 shadow-sm space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
-              <div>
-                <span className="text-xs font-bold text-blue-600 uppercase font-mono">Case Study: @amakitchen</span>
-                <h3 className="text-xl font-bold text-slate-900 font-display">
-                  Batch Order: Friday Lunch Pack (20 Meals × GHS 25 = GHS 500)
+                <h3 className="text-2xl sm:text-3xl font-bold font-display text-slate-900">
+                  Split Any Expense with 1-Click WhatsApp Links
                 </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Dinner checks, generator fuel, WiFi subscriptions, or road trip transport. Create a split, share the link to your WhatsApp group, and let Mova automatically tally contributions as members approve their MoMo prompt.
+                </p>
+                <div className="pt-2">
+                  <Link
+                    href="/split"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-amber-800 hover:text-amber-950"
+                  >
+                    <span>Try the Group Split builder</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-bold font-mono text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
-                  18/20 Paid • GHS 450 Collected
+              <div className="md:col-span-5 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3 text-xs">
+                <div className="font-bold text-slate-900">Friday Pizza & Drinks (GHS 300)</div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-[11px] text-slate-500">
+                    <span>4 members • GHS 75 each</span>
+                    <span className="text-emerald-600 font-bold">3/4 Settled</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#FFD200] rounded-full w-3/4" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "PAY" && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center p-8 rounded-3xl bg-amber-50/40 border border-amber-200/60">
+              <div className="md:col-span-7 space-y-4">
+                <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">
+                  Digital Financial Identity
                 </span>
-                <Link href="/merchant">
-                  <button className="text-xs font-bold text-blue-600 underline">Open Merchant Portal ↗</button>
+                <h3 className="text-2xl sm:text-3xl font-bold font-display text-slate-900">
+                  Say Goodbye to Sharing 10-Digit Phone Numbers
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Keep your personal phone number private. Claim your personal Mova handle like <strong className="text-slate-900">@gabriel</strong>. Friends verify your photo and verified name before confirming payment.
+                </p>
+                <div className="pt-2">
+                  <a
+                    href="#waitlist"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-amber-800 hover:text-amber-950"
+                  >
+                    <span>Reserve your @handle on the waitlist</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+              <div className="md:col-span-5 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3 text-xs text-center">
+                <div className="h-16 w-16 mx-auto rounded-full bg-[#FFD200] text-slate-950 flex items-center justify-center font-bold text-xl shadow-md">
+                  GO
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-slate-900 text-sm">Gabriel Okello</h4>
+                  <p className="font-mono text-amber-700 text-xs font-bold">@gabriel</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "FUND" && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center p-8 rounded-3xl bg-amber-50/40 border border-amber-200/60">
+              <div className="md:col-span-7 space-y-4">
+                <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">
+                  Community Crowdfunding & Goals
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-bold font-display text-slate-900">
+                  Raise Money for Causes with Full Transparency
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Birthdays, funerals, school fees, medical support, or community projects. Donors contribute via MoMo and watch the funding meter rise live.
+                </p>
+                <div className="pt-2">
+                  <Link
+                    href="/fund"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-amber-800 hover:text-amber-950"
+                  >
+                    <span>Explore active campaigns</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+              <div className="md:col-span-5 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3 text-xs">
+                <span className="text-[10px] font-bold text-amber-700 uppercase">Live Campaign</span>
+                <div className="font-bold text-slate-900 text-sm">Help Sarah Launch Her Bakery</div>
+                <div className="space-y-1">
+                  <div className="flex justify-between text-xs font-bold">
+                    <span className="text-slate-900">GHS 12,500</span>
+                    <span className="text-slate-400">Target: GHS 15,000</span>
+                  </div>
+                  <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#FFD200] rounded-full w-[83%]" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "MERCHANT" && (
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center p-8 rounded-3xl bg-amber-50/40 border border-amber-200/60">
+              <div className="md:col-span-7 space-y-4">
+                <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">
+                  For Campus Vendors & Stalls
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-bold font-display text-slate-900">
+                  Fast QR Checkout & Group Lunch Pre-Orders
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  Food vendors like <strong className="text-slate-900">@AmaKitchen</strong> can collect payments without expensive card terminals. Customers scan QR codes and pay via MoMo with zero fake SMS scam risk.
+                </p>
+                <div className="pt-2">
+                  <Link
+                    href="/merchant"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-amber-800 hover:text-amber-950"
+                  >
+                    <span>Visit the Merchant Hub</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+              <div className="md:col-span-5 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3 text-xs text-center">
+                <div className="h-12 w-12 mx-auto rounded-2xl bg-[#FFD200]/30 text-slate-900 flex items-center justify-center font-bold">
+                  <Store className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-slate-900 text-sm">Ama's Campus Kitchen</h4>
+                  <p className="font-mono text-amber-700 text-xs font-bold">@amakitchen</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 4: TIKTOK LIVE SPOTLIGHT                                          */}
+      {/* ========================================================================= */}
+      <div className="w-full py-20 px-6 sm:px-12 bg-slate-950 text-white">
+        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-8 sm:p-12 relative overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 space-y-4">
+              <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">
+                COMING SOON: TIKTOK LIVE & SOCIAL
+              </span>
+              <h3 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-white">
+                Contribute Directly Inside TikTok Live & Telegram Group Chats
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-xl">
+                African creators lose huge percentages to virtual coins. Mova's upcoming in-stream button lets fans tip and crowdfund directly using their MTN MoMo wallets with real-time broadcast alerts.
+              </p>
+              <div className="pt-2 flex flex-wrap gap-3">
+                <Link
+                  href="/live"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#FFD200] hover:bg-[#FACC15] text-slate-950 px-5 py-2.5 text-xs font-black shadow-lg shadow-amber-400/20 transition-all active:scale-95"
+                >
+                  <span>Test the TikTok Live Interactive Demo</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                <QrCode className="h-5 w-5 text-blue-600" />
-                <span className="font-bold text-slate-900 block">Table QR Standees</span>
-                <p className="text-[11px] text-slate-500">Scan-to-pay countertop displays for instant walk-up sales.</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                <Users className="h-5 w-5 text-blue-600" />
-                <span className="font-bold text-slate-900 block">Group Lunch Ordering</span>
-                <p className="text-[11px] text-slate-500">Students & offices join one link and settle individually.</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                <Receipt className="h-5 w-5 text-blue-600" />
-                <span className="font-bold text-slate-900 block">Digital Micro-Receipts</span>
-                <p className="text-[11px] text-slate-500">1-tap shareable WhatsApp order confirmation tickets.</p>
-              </div>
-              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-1">
-                <ShieldCheck className="h-5 w-5 text-blue-600" />
-                <span className="font-bold text-slate-900 block">Zero Surcharge</span>
-                <p className="text-[11px] text-slate-500">Direct telecom wallet credit with automated reconciliations.</p>
+            <div className="lg:col-span-4 flex justify-center">
+              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 max-w-[240px]">
+                <div className="h-10 w-10 mx-auto rounded-full bg-[#FFD200] text-slate-950 flex items-center justify-center font-bold text-sm">
+                  ₵
+                </div>
+                <div className="text-xs font-bold text-white">In-Stream MoMo Tipping</div>
+                <p className="text-[10px] text-slate-400">
+                  Live broadcast alerts & 100% direct mobile money payouts.
+                </p>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
-        {/* ========================================================================= */}
-        {/* PART 5: MOMO FINTECH LAB TRACK ALIGNMENT (SECTION 8 & 11 COMPLIANCE)      */}
-        {/* ========================================================================= */}
-        <section id="competition" className="py-20 px-6 sm:px-12 bg-slate-900 text-white">
-          <div className="max-w-4xl mx-auto text-center space-y-4">
-            <span className="inline-flex rounded-full bg-blue-500/20 border border-blue-400/30 px-3.5 py-1 text-xs font-bold text-blue-400">
-              Fintech Lab Alignment
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-extrabold font-display tracking-tight">
-              Aligned with MTN MoMo Tracks
+      {/* ========================================================================= */}
+      {/* SECTION 5: WHY MOVA WINS                                                  */}
+      {/* ========================================================================= */}
+      <div id="why-mova" className="w-full py-20 px-6 sm:px-12 bg-white border-t border-slate-100">
+        <div className="max-w-5xl mx-auto space-y-8">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 font-display">
+              Why Mova Wins Over WhatsApp & Spreadsheets
             </h2>
-            <p className="text-sm text-slate-400 max-w-xl mx-auto">
-              How Mova maps across the four competition categories to create a connected financial interaction layer.
+            <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
+              Comparing manual mobile money chaos against Mova's automated social layer.
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto text-xs">
-            <div className="p-6 rounded-3xl bg-slate-800/80 border border-slate-700 space-y-2">
-              <span className="text-[10px] uppercase font-bold text-brand">Primary Track</span>
-              <h4 className="text-base font-bold text-white font-display">Everyday Payments</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Bill splitting, payment requests, and effortless group contributions for daily life.
-              </p>
-            </div>
-            <div className="p-6 rounded-3xl bg-slate-800/80 border border-slate-700 space-y-2">
-              <span className="text-[10px] uppercase font-bold text-blue-400">Secondary Track</span>
-              <h4 className="text-base font-bold text-white font-display">Merchant Growth</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Payment links, bulk lunch pre-orders, digital receipts, and customer loyalty tools.
-              </p>
-            </div>
-            <div className="p-6 rounded-3xl bg-slate-800/80 border border-slate-700 space-y-2">
-              <span className="text-[10px] uppercase font-bold text-emerald-400">Secondary Track</span>
-              <h4 className="text-base font-bold text-white font-display">Trust & Identity</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Verified digital @handles, recipient verification shields, and fraud elimination.
-              </p>
-            </div>
-            <div className="p-6 rounded-3xl bg-slate-800/80 border border-slate-700 space-y-2">
-              <span className="text-[10px] uppercase font-bold text-purple-400">Secondary Track</span>
-              <h4 className="text-base font-bold text-white font-display">Future Finance</h4>
-              <p className="text-slate-400 leading-relaxed">
-                Community crowdfunding, savings milestones, and interconnected social ecosystems.
-              </p>
-            </div>
+          <div className="rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-900 font-bold uppercase tracking-wider text-[10px]">
+                <tr>
+                  <th className="py-4 px-6">Capability</th>
+                  <th className="py-4 px-6 text-rose-600">The Old Way (WhatsApp + Screenshots)</th>
+                  <th className="py-4 px-6 text-amber-900 bg-amber-50">The Mova Platform</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium text-slate-600">
+                <tr>
+                  <td className="py-4 px-6 font-bold text-slate-900">User Identification</td>
+                  <td className="py-4 px-6 text-slate-500">Raw 10-digit SIM (typo errors)</td>
+                  <td className="py-4 px-6 text-amber-950 font-bold bg-amber-50/50">Verified @handles with recipient confirmation</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-bold text-slate-900">Group Tracking</td>
+                  <td className="py-4 px-6 text-slate-500">Manual spreadsheets & lost chats</td>
+                  <td className="py-4 px-6 text-amber-950 font-bold bg-amber-50/50">Automatic real-time progress & check-offs</td>
+                </tr>
+                <tr>
+                  <td className="py-4 px-6 font-bold text-slate-900">Proof of Payment</td>
+                  <td className="py-4 px-6 text-slate-500">Fakeable SMS screenshots</td>
+                  <td className="py-4 px-6 text-amber-950 font-bold bg-amber-50/50">Direct USSD settlement receipts on MTN rail</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
-          {/* MVP Architecture Visualizer */}
-          <div className="mt-16 max-w-4xl mx-auto rounded-3xl bg-slate-950/80 border border-slate-800 p-6 sm:p-8 space-y-6">
-            <div className="text-center space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-brand">System Architecture</span>
-              <h4 className="text-xl font-bold font-display text-white">How Mova Interacts with the MoMo Rail</h4>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 font-mono text-xs text-center space-y-4">
-              <div className="inline-block px-6 py-2.5 rounded-2xl bg-blue-600 text-white font-bold tracking-wider shadow-lg shadow-blue-500/20">
-                MOVA INTERACTION LAYER
-              </div>
-              
-              <div className="flex justify-center text-slate-500 text-base">│</div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-3.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white space-y-1">
-                  <div className="text-blue-400 font-bold">MOVA PAY</div>
-                  <div className="text-[10px] text-slate-400">P2P Payment Requests</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white space-y-1">
-                  <div className="text-amber-400 font-bold">MOVA SPLIT</div>
-                  <div className="text-[10px] text-slate-400">Group Goals & Bill Splits</div>
-                </div>
-                <div className="p-3.5 rounded-xl bg-slate-800/90 border border-slate-700 text-white space-y-1">
-                  <div className="text-emerald-400 font-bold">MOVA FUND</div>
-                  <div className="text-[10px] text-slate-400">Crowdfunding & Backing</div>
-                </div>
-              </div>
-
-              <div className="flex justify-center text-slate-500 text-base">│</div>
-
-              <div className="max-w-md mx-auto p-3 rounded-xl bg-slate-800/70 border border-blue-500/30 text-white text-[11px] space-y-0.5">
-                <div className="font-bold text-blue-300">MOVA IDENTITY & TRUST REGISTRY</div>
-                <div className="text-[10px] text-slate-400">Verified @handles • Recipient Validation • Real-time Tracking</div>
-              </div>
-
-              <div className="flex justify-center text-brand text-lg font-bold">▼</div>
-
-              <div className="inline-block px-8 py-3 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black tracking-wide shadow-md">
-                MTN MoMo RAIL (Underlying Settlement & Liquidity Engine)
-              </div>
-            </div>
-
-            {/* Technical API Inspector */}
-            <div className="mt-8 pt-6 border-t border-slate-800 space-y-3">
-              <div className="flex items-center justify-between text-[11px] font-mono">
-                <span className="text-slate-400 flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                  MTN MoMo API Integration Contract (Sandbox Ready)
-                </span>
-                <span className="text-blue-400 bg-blue-950/60 px-2.5 py-0.5 rounded-full border border-blue-800">
-                  POST /collection/v1_0/requesttopay
-                </span>
-              </div>
-              <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto text-left leading-relaxed">
-                <span className="text-slate-500">// Header Parameters</span><br />
-                <span className="text-purple-400">X-Reference-Id</span>: <span className="text-emerald-400">"c7e2b6a9-4d81-4ef3-bf72-89b31d04ec92"</span><br />
-                <span className="text-purple-400">X-Target-Environment</span>: <span className="text-emerald-400">"sandbox"</span><br />
-                <span className="text-purple-400">Ocp-Apim-Subscription-Key</span>: <span className="text-emerald-400">"8f2a...momo_key"</span><br />
-                <br />
-                <span className="text-slate-500">// Payload Dispatched by Mova Group Engine</span><br />
-                &#123;<br />
-                &nbsp;&nbsp;<span className="text-blue-400">"amount"</span>: <span className="text-amber-300">"200.00"</span>,<br />
-                &nbsp;&nbsp;<span className="text-blue-400">"currency"</span>: <span className="text-emerald-400">"GHS"</span>,<br />
-                &nbsp;&nbsp;<span className="text-blue-400">"externalId"</span>: <span className="text-emerald-400">"MOVA-SPLIT-WEEKEND-ADA-04"</span>,<br />
-                &nbsp;&nbsp;<span className="text-blue-400">"payer"</span>: &#123; <span className="text-blue-400">"partyIdType"</span>: <span className="text-emerald-400">"MSISDN"</span>, <span className="text-blue-400">"partyId"</span>: <span className="text-emerald-400">"233244123456"</span> &#125;,<br />
-                &nbsp;&nbsp;<span className="text-blue-400">"payerMessage"</span>: <span className="text-emerald-400">"Weekend Trip Contribution via Mova"</span>,<br />
-                &nbsp;&nbsp;<span className="text-blue-400">"payeeNote"</span>: <span className="text-emerald-400">"Settled to @sadick Group Treasury"</span><br />
-                &#125;
-              </div>
-            </div>
-          </div>
-
-          {/* ========================================================================= */}
-          {/* FUTURE EXPANSION ROADMAP (DOCUMENT SECTION 12 COMPLIANCE)                 */}
-          {/* ========================================================================= */}
-          <div className="mt-20 pt-16 border-t border-slate-800 max-w-6xl mx-auto space-y-8">
-            <div className="text-center space-y-2">
-              <span className="text-[10px] uppercase font-bold text-blue-400 tracking-widest">
-                Strategic Horizon
-              </span>
-              <h3 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
-                Beyond the MVP: Future Ecosystem Expansion
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-                Once the core payment and collection layer is established, Mova unlocks deep financial integrations across the MoMo ecosystem.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-sm">Verified Merchant IDs</span>
-                  <span className="text-[9px] uppercase font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-800">Ready</span>
-                </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  Cryptographically verified campus vendor badges linked to telecom national ID registries.
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-sm">Automated Micro-Receipts</span>
-                  <span className="text-[9px] uppercase font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-800">Ready</span>
-                </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  Instant shareable WhatsApp proof-of-purchase eliminating dispute resolution headaches.
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-sm">Community Susu & Savings</span>
-                  <span className="text-[9px] uppercase font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-800">Phase 2</span>
-                </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  Rotating informal savings groups (Susu/Chama) with automated MoMo direct debit schedules.
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-sm">Fraud & Sim-Box Shield</span>
-                  <span className="text-[9px] uppercase font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-800">Phase 2</span>
-                </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  Heuristic velocity limits and biometric device binding to block impersonation scams.
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-sm">Campus Loyalty & Cashback</span>
-                  <span className="text-[9px] uppercase font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-800">Phase 2</span>
-                </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  Automated points and student cashback discounts on every 5th meal ordered through Mova.
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 hover:border-slate-600 transition-colors">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-sm">Alternative Credit Scoring</span>
-                  <span className="text-[9px] uppercase font-bold text-purple-400 bg-purple-950/60 px-2 py-0.5 rounded-full border border-purple-800">Ecosystem</span>
-                </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  Transaction velocity and group settlement punctuality score unlocking MoMo micro-loans.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* PART 6: VALUE PROPOSITION, FAQ & EXECUTIVE FOOTER                         */}
-        {/* ========================================================================= */}
-        <section className="py-20 px-6 sm:px-12 bg-white">
-          {/* Competition Pitch Card */}
-          <div className="max-w-4xl mx-auto mb-20 rounded-3xl bg-gradient-to-br from-blue-50 via-indigo-50/40 to-white border border-blue-100 p-8 sm:p-12 shadow-sm space-y-6">
-            <span className="inline-flex rounded-full bg-blue-600 text-white px-3 py-1 text-[11px] font-black uppercase tracking-wider">
-              The MoMo Fintech Lab Pitch
-            </span>
-            <blockquote className="space-y-4 text-slate-800 font-medium leading-relaxed sm:text-lg">
-              <p className="font-bold text-xl sm:text-2xl text-slate-950 font-display">
-                "Someone owes you GHS 50. What do you send them? Their MoMo number."
-              </p>
-              <p className="text-sm sm:text-base text-slate-600">
-                Now imagine you're organizing a birthday with five friends. Someone pays for the cake. Someone pays for food. Someone collects contributions. Suddenly, WhatsApp is full of MoMo numbers, screenshots, and messages asking, <em>"Have you paid?"</em>
-              </p>
-              <p className="text-sm sm:text-base font-semibold text-blue-700">
-                MoMo made moving money easy. But managing money together is still surprisingly difficult. Mova changes that.
-              </p>
-            </blockquote>
-          </div>
-
-          {/* Value Proposition Comparison Table */}
-          <div className="max-w-5xl mx-auto mb-20 space-y-8">
-            <div className="text-center space-y-3">
-              <span className="inline-flex rounded-full bg-emerald-50 border border-emerald-100 px-3.5 py-1 text-xs font-bold text-emerald-600">
-                The Mova Advantage
-              </span>
-              <h3 className="text-3xl sm:text-4xl font-extrabold text-slate-950 font-display">
-                Why Mova Wins Over Traditional Workarounds
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
-                Comparing manual WhatsApp chasing against Mova's automated social layer on top of MoMo.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-900 font-bold uppercase tracking-wider text-[10px]">
-                  <tr>
-                    <th className="py-4 px-6">Capability</th>
-                    <th className="py-4 px-6 text-rose-600">Traditional MoMo / WhatsApp</th>
-                    <th className="py-4 px-6 text-blue-600 bg-blue-50/50">Mova Connected Platform</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-medium text-slate-600">
-                  <tr>
-                    <td className="py-4 px-6 font-bold text-slate-900">User Identification</td>
-                    <td className="py-4 px-6 text-slate-500">Raw 10-digit SIM (error prone)</td>
-                    <td className="py-4 px-6 text-blue-700 font-bold bg-blue-50/30">Verified @handles with recipient confirmation</td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 px-6 font-bold text-slate-900">Group Contribution Tracking</td>
-                    <td className="py-4 px-6 text-slate-500">Chasing screenshots & shared spreadsheets</td>
-                    <td className="py-4 px-6 text-blue-700 font-bold bg-blue-50/30">Automated real-time ledger & settlement bar</td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 px-6 font-bold text-slate-900">Payment Initiation</td>
-                    <td className="py-4 px-6 text-slate-500">Manual dialing *170# & entering numbers</td>
-                    <td className="py-4 px-6 text-blue-700 font-bold bg-blue-50/30">Direct USSD push prompt on participant's phone</td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 px-6 font-bold text-slate-900">Community Crowdfunding</td>
-                    <td className="py-4 px-6 text-slate-500">Foreign platforms requiring US/UK bank accounts</td>
-                    <td className="py-4 px-6 text-blue-700 font-bold bg-blue-50/30">Local MoMo rails with instant wallet liquidity</td>
-                  </tr>
-                  <tr>
-                    <td className="py-4 px-6 font-bold text-slate-900">Micro-Merchant Orders</td>
-                    <td className="py-4 px-6 text-slate-500">Verbal calls & unorganized WhatsApp DMs</td>
-                    <td className="py-4 px-6 text-blue-700 font-bold bg-blue-50/30">Batch pre-orders, table QR standees & micro-receipts</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div className="max-w-3xl mx-auto space-y-8">
-            <div className="text-center space-y-3">
-              <span className="inline-flex rounded-full bg-blue-50 border border-blue-100 px-3.5 py-1 text-xs font-bold text-blue-600">
-                Frequently Asked Questions
-              </span>
-              <h3 className="text-3xl font-extrabold text-slate-950 font-display">
-                Everything You Need to Know About Mova
-              </h3>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              {[
-                {
-                  q: "Does Mova replace MTN Mobile Money?",
-                  a: "No! Mova does not replace MoMo. MoMo remains the underlying payment and settlement infrastructure. Mova manages the social interaction and tracking layer around the payment.",
-                },
-                {
-                  q: "How does bill splitting work on Mova?",
-                  a: "The organizer creates a group (e.g. Weekend Trip to Ada for GHS 800), adds participants by @handle or phone number, and Mova automatically dispatches USSD prompts to everyone's phone while live-tracking who has settled.",
-                },
-                {
-                  q: "Are there foreign bank requirements for Mova Fund?",
-                  a: "None! Unlike overseas crowdfunding tools that require foreign bank accounts and take 14 days to disburse, Mova Fund is tied directly to local verified MoMo wallets with instant USSD push approval.",
-                },
-                {
-                  q: "How do campus merchants use Mova?",
-                  a: "Vendors like @amakitchen can create batch order links for student teams, generate physical countertop QR standees, and auto-issue verified WhatsApp micro-receipts.",
-                },
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-slate-200 p-4 space-y-2 cursor-pointer transition-all hover:border-blue-300"
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                >
-                  <div className="flex justify-between items-center font-bold text-slate-900 text-sm">
-                    <span>{item.q}</span>
-                    <span>{openFaq === idx ? "−" : "+"}</span>
-                  </div>
-                  {openFaq === idx && (
-                    <p className="text-slate-600 leading-relaxed pt-1 text-xs">
-                      {item.a}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Executive Footer */}
-        <footer className="border-t border-slate-200 bg-slate-50 py-12 px-6 sm:px-12 text-xs text-slate-500">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="space-y-1 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-950 text-white font-black text-xs">
-                  §
-                </div>
-                <span className="font-extrabold text-slate-900 text-sm">Mova</span>
-                <span className="text-slate-400">| Money moves better together.</span>
-              </div>
-              <p className="text-[11px] text-slate-400">
-                A connected payment and collective finance platform powered by MTN Mobile Money.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-6 font-semibold text-slate-600">
-              <Link href="/split" className="hover:text-blue-600">Mova Split</Link>
-              <Link href="/fund" className="hover:text-blue-600">Mova Fund</Link>
-              <Link href="/merchant" className="hover:text-blue-600">Merchant Hub</Link>
-              <Link href="/pay" className="hover:text-blue-600">Mova Pay</Link>
-              <Link href="/dashboard" className="hover:text-blue-600">Dashboard</Link>
-            </div>
-          </div>
-          <div className="mt-8 text-center text-[10px] text-slate-400 border-t border-slate-200/60 pt-4">
-            Built for the MoMo Fintech Lab Hackathon & Competition • Proudly powered by MTN MoMo Rails
-          </div>
-        </footer>
+        </div>
       </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 6: VIP WAITLIST SECTION (EXACT TRIPTYCH DESIGN AS REQUESTED)     */}
+      {/* ========================================================================= */}
+      <div id="waitlist" className="w-full py-20 px-4 sm:px-10 bg-[#EDF0F8] text-slate-900 border-t border-slate-200">
+        <div className="max-w-6xl mx-auto space-y-10">
+          
+          {/* Section Header Title & Subtitle */}
+          <div className="space-y-2">
+            <h2 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-slate-950">
+              Reserve Your @Handle on the VIP Waitlist
+            </h2>
+            <p className="text-sm text-slate-600 font-medium">
+              Join over 1,428 Ghanaians locking in their identity before the official public beta rollout.
+            </p>
+          </div>
+
+          {/* TRIPTYCH CONTAINER WITH DASHED OUTLINE & SIDE VERTICAL PILLS (EXACT REPLICA) */}
+          <div className="relative flex items-center justify-center">
+            
+            {/* Left Vertical Pill: Identity */}
+            <div className="hidden xl:flex absolute -left-5 z-20 items-center justify-center w-9 h-36 rounded-2xl bg-[#1E3EF8] text-white font-bold text-[11px] tracking-widest [writing-mode:vertical-lr] rotate-180 shadow-md">
+              Identity
+            </div>
+
+            {/* Right Vertical Pill: 0% Fees */}
+            <div className="hidden xl:flex absolute -right-5 z-20 items-center justify-center w-9 h-36 rounded-2xl bg-[#1E3EF8] text-white font-bold text-[11px] tracking-widest [writing-mode:vertical-lr] rotate-180 shadow-md">
+              0% Fees
+            </div>
+
+            {/* Dashed outer box */}
+            <div className="w-full border-2 border-dashed border-slate-300 rounded-[36px] p-4 sm:p-6 lg:p-8">
+              
+              {/* The 3 Cards Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                
+                {/* CARD 1 (LEFT - WHITE) */}
+                <div className="rounded-3xl bg-white p-7 sm:p-8 shadow-md border border-slate-100 flex flex-col justify-between space-y-6">
+                  <div className="space-y-6">
+                    {/* Top Row: Circular number badge 1 */}
+                    <div className="flex items-center justify-between">
+                      <div className="h-9 w-9 rounded-full bg-slate-100 text-slate-800 font-bold text-sm flex items-center justify-center shadow-inner">
+                        1
+                      </div>
+                    </div>
+
+                    {/* Outline House / Identity Icon */}
+                    <div className="flex justify-center pt-2">
+                      <div className="h-16 w-16 text-slate-800 flex items-center justify-center">
+                        <HomeIcon className="w-12 h-12 stroke-[1.5]" />
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="space-y-3">
+                      <h3 className="text-base sm:text-lg font-bold text-slate-950 font-display">
+                        Reserving Your @Handle:
+                      </h3>
+                      <div className="flex items-start gap-2.5 text-xs text-slate-600 leading-relaxed">
+                        <span className="h-2 w-2 rounded-full bg-[#1E3EF8] mt-1.5 shrink-0" />
+                        <p>
+                          Secure your unique personal or business identity (e.g. <strong>@kofi</strong>, <strong>@amakitchen</strong>) before the public launch. Guaranteed reserved forever with zero name squatting.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CARD 2 (CENTER - THE ELEVATED ROYAL BLUE HERO CARD) */}
+                <div className="rounded-3xl bg-[#1E3EF8] text-white p-7 sm:p-8 shadow-2xl shadow-blue-600/30 flex flex-col justify-between space-y-6 lg:-translate-y-2 lg:scale-[1.03] transition-all">
+                  <div className="space-y-6">
+                    {/* Top Row: Circular number badge 2 */}
+                    <div className="flex items-center justify-between">
+                      <div className="h-9 w-9 rounded-full bg-white text-[#1E3EF8] font-bold text-sm flex items-center justify-center shadow-md">
+                        2
+                      </div>
+                    </div>
+
+                    {/* Network Hub Icon (exact replica from image) */}
+                    <div className="flex justify-center pt-2">
+                      <div className="h-16 w-16 text-white flex items-center justify-center">
+                        <svg viewBox="0 0 48 48" className="w-12 h-12 stroke-current fill-none stroke-[1.75]">
+                          <circle cx="24" cy="24" r="5" fill="currentColor" />
+                          <circle cx="12" cy="14" r="3" fill="currentColor" />
+                          <circle cx="36" cy="14" r="3" fill="currentColor" />
+                          <circle cx="10" cy="34" r="3" fill="currentColor" />
+                          <circle cx="38" cy="34" r="3" fill="currentColor" />
+                          <circle cx="24" cy="40" r="3" fill="currentColor" />
+                          <line x1="24" y1="19" x2="24" y2="9" />
+                          <circle cx="24" cy="7" r="3" fill="currentColor" />
+                          <line x1="20" y1="21" x2="14" y2="16" />
+                          <line x1="28" y1="21" x2="34" y2="16" />
+                          <line x1="20" y1="27" x2="12" y2="32" />
+                          <line x1="28" y1="27" x2="36" y2="32" />
+                          <line x1="24" y1="29" x2="24" y2="37" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="space-y-3">
+                      <h3 className="text-base sm:text-lg font-bold text-white font-display">
+                        0% Platform Fees:
+                      </h3>
+                      <div className="flex items-start gap-2.5 text-xs text-blue-100 leading-relaxed">
+                        <span className="h-2 w-2 rounded-full bg-white mt-1.5 shrink-0" />
+                        <p>
+                          Founding members enjoy 0% Mova service fees on their first 15 group bill splits, campaign collections, and vendor pre-orders. Direct settlement to your MTN MoMo wallet.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CARD 3 (RIGHT - WHITE) */}
+                <div className="rounded-3xl bg-white p-7 sm:p-8 shadow-md border border-slate-100 flex flex-col justify-between space-y-6">
+                  <div className="space-y-6">
+                    {/* Top Row: Circular number badge 3 */}
+                    <div className="flex items-center justify-between">
+                      <div className="h-9 w-9 rounded-full bg-slate-100 text-slate-800 font-bold text-sm flex items-center justify-center shadow-inner">
+                        3
+                      </div>
+                    </div>
+
+                    {/* Handshake Icon */}
+                    <div className="flex justify-center pt-2">
+                      <div className="h-16 w-16 text-slate-800 flex items-center justify-center">
+                        <Handshake className="w-12 h-12 stroke-[1.5]" />
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="space-y-3">
+                      <h3 className="text-base sm:text-lg font-bold text-slate-950 font-display">
+                        Priority Beta & Founding Badge:
+                      </h3>
+                      <div className="flex items-start gap-2.5 text-xs text-slate-600 leading-relaxed">
+                        <span className="h-2 w-2 rounded-full bg-[#1E3EF8] mt-1.5 shrink-0" />
+                        <p>
+                          Get first-in-line access to TikTok Live in-stream payments, Telegram bot split commands, and a verified gold founding shield displayed permanently on your profile.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          {/* BOTTOM METADATA BAR (EXACT FROM REFERENCE IMAGE) */}
+          <div className="space-y-3 pt-2">
+            <div className="text-[11px] text-slate-500 italic">
+              Source: MTN Mobile Money Verified Social Layer
+            </div>
+            <div className="border-t border-slate-300/80 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-xl font-black tracking-tight font-display text-slate-950">
+                MOVA
+              </div>
+              <div className="flex items-center gap-6 text-xs text-slate-600 font-medium">
+                <div className="flex items-center gap-2">
+                  <Linkedin className="w-4 h-4 text-slate-500" />
+                  <Instagram className="w-4 h-4 text-slate-500" />
+                  <Youtube className="w-4 h-4 text-slate-500" />
+                  <span className="font-semibold text-slate-800">@movapay</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-800 font-bold">
+                  <Globe className="w-4 h-4 text-[#1E3EF8]" />
+                  <span>mova.app</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* INTERACTIVE WAITLIST SIGNUP FORM */}
+          <div className="mt-8 p-6 sm:p-10 rounded-3xl bg-white border border-slate-200/80 shadow-xl max-w-3xl mx-auto">
+            {waitlistSuccess ? (
+              <div className="text-center space-y-4">
+                <div className="h-16 w-16 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-950 font-display">You're on the VIP Waitlist!</h3>
+                <p className="text-xs text-slate-600 max-w-md mx-auto">
+                  You have reserved <strong>{waitlistSuccess.handle}</strong> as position <strong>#{waitlistSuccess.queueNumber}</strong>. We will message you when beta invites drop.
+                </p>
+                <button
+                  type="button"
+                  onClick={copyReferralLink}
+                  className="py-2.5 px-6 rounded-full bg-[#1E3EF8] hover:bg-blue-700 text-white font-bold text-xs shadow-md"
+                >
+                  {copiedReferral ? "Referral Link Copied!" : "Share Link on WhatsApp"}
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleWaitlistSubmit} className="space-y-4">
+                <div className="text-center space-y-1 pb-2">
+                  <h3 className="text-xl font-extrabold text-slate-950 font-display">Claim Your Spot Below</h3>
+                  <p className="text-xs text-slate-500">Zero fees. Direct settlement to your MTN MoMo wallet.</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      Desired @Handle
+                    </label>
+                    <div className="relative flex items-center">
+                      <span className="absolute left-3.5 font-bold text-slate-400 text-sm">@</span>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. kofi_mensah"
+                        value={desiredHandle}
+                        onChange={(e) => setDesiredHandle(cleanHandle(e.target.value))}
+                        className="w-full pl-8 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#1E3EF8]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      Phone Number or Email
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="024 XXX XXXX or email"
+                      value={contactInfo}
+                      onChange={(e) => setContactInfo(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#1E3EF8]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                    Primary Use Case
+                  </label>
+                  <select
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 focus:outline-none focus:border-[#1E3EF8]"
+                  >
+                    <option value="Personal & Friend Groups">Personal & Friend Group Splits</option>
+                    <option value="TikTok & Content Creator">TikTok Live & Content Creator</option>
+                    <option value="Campus & Small Merchant">Campus Food Vendor / Small Merchant</option>
+                    <option value="Fundraiser & Community Organizer">Fundraising & Community Organizer</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isJoiningWaitlist}
+                  className="w-full py-3 rounded-xl bg-[#1E3EF8] hover:bg-blue-700 text-white font-bold text-xs shadow-lg shadow-blue-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                >
+                  {isJoiningWaitlist ? (
+                    <>
+                      <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Reserving Your VIP Spot...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 text-amber-300" />
+                      <span>Claim My Free Handle & Join Waitlist</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 7: FAQ                                                            */}
+      {/* ========================================================================= */}
+      <div id="faq" className="w-full py-20 px-6 sm:px-12 bg-white border-t border-slate-100">
+        <div className="max-w-3xl mx-auto space-y-8">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl font-extrabold text-slate-950 font-display">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500">
+              Everything you need to know about Mova and the upcoming beta.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              {
+                q: "Do my friends need to download an app to contribute?",
+                a: "No! When you share a Mova link on WhatsApp, friends simply tap the link in their browser, enter their phone number, and approve the official MTN MoMo USSD prompt on their phones.",
+              },
+              {
+                q: "Is Mova a new mobile money wallet?",
+                a: "No. You don't need to deposit money into a new wallet or deal with cashouts. Mova connects directly to your existing MTN Mobile Money wallet.",
+              },
+              {
+                q: "How does Mova prevent wrong-number transfers?",
+                a: "Instead of typing raw 10-digit SIM numbers, Mova uses verified handles like @gabriel. Before confirming any transfer, you see the recipient's verified photo and registered name.",
+              },
+              {
+                q: "Is it completely free to join the waitlist?",
+                a: "Yes! Joining the waitlist and claiming your unique @handle is 100% free and reserves your founding member perks.",
+              },
+            ].map((faq, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl border border-slate-200 overflow-hidden transition-colors"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full flex items-center justify-between p-5 text-left text-xs sm:text-sm font-bold text-slate-900 hover:bg-slate-50"
+                >
+                  <span>{faq.q}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-slate-400 transition-transform ${
+                      openFaq === idx ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {openFaq === idx && (
+                  <div className="px-5 pb-5 text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* FOOTER: FULL SCREEN WIDTH                                                 */}
+      {/* ========================================================================= */}
+      <footer className="w-full border-t border-slate-200 bg-slate-50 py-14 px-6 sm:px-12 text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-950 text-[#FFD200] font-black text-xs">
+                §
+              </div>
+              <span className="font-extrabold text-slate-900 text-sm">Mova</span>
+              <span className="text-slate-400">| Money moves better together.</span>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              The connected payment and collective finance platform powered by MTN Mobile Money.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-6 font-semibold text-slate-600">
+            <Link href="/split" className="hover:text-amber-700">Mova Split</Link>
+            <Link href="/fund" className="hover:text-amber-700">Mova Fund</Link>
+            <Link href="/merchant" className="hover:text-amber-700">Merchant Hub</Link>
+            <Link href="/live" className="text-amber-700 hover:text-amber-800 font-bold">TikTok Live & Social</Link>
+            <a href="#waitlist" className="hover:text-amber-700">Join Waitlist</a>
+          </div>
+        </div>
+        <div className="mt-8 text-center text-[10px] text-slate-400 border-t border-slate-200/60 pt-4 max-w-7xl mx-auto">
+          © 2026 Mova Technologies • The connected social layer for MTN Mobile Money. Money moves better together.
+        </div>
+      </footer>
 
       {/* Interactive MoMo Modal */}
       <MoMoCheckoutModal
@@ -1098,7 +1364,7 @@ export default function Home() {
           recipientPhone: "055 491 8832",
           amount: 200,
           currency: "GHS",
-          purpose: "MoMo Fintech Lab Prototype Verification",
+          purpose: "MoMo Prototype Verification",
         }}
       />
     </div>
