@@ -194,18 +194,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Subtle Tagline Pill */}
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/90 bg-amber-50 px-3.5 py-1 text-xs font-semibold text-amber-900 shadow-sm">
-              <span className="text-amber-500 text-xs">✧</span>
-              <span>
-                {audience === "groups"
-                  ? "The Connected Social MoMo Layer"
-                  : "Live Streaming & In-Chat Commerce Rails"}
-              </span>
-            </div>
-          </div>
-
           {/* Hero Headline: MONEY MOVES BETTER TOGETHER */}
           {audience === "groups" ? (
             <h1 className="text-4xl sm:text-6xl md:text-[72px] font-black tracking-tight text-slate-950 font-display leading-[1.05] uppercase">
@@ -586,9 +574,6 @@ export default function Home() {
       <div id="calculator" className="w-full py-20 px-6 sm:px-12 bg-amber-50/40 border-t border-amber-200/50">
         <div className="max-w-5xl mx-auto space-y-10">
           <div className="max-w-2xl mx-auto text-center space-y-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold bg-[#FFD200] text-slate-950">
-              Try It Yourself
-            </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 font-display">
               See what chasing group money actually costs.
             </h2>
@@ -912,9 +897,6 @@ export default function Home() {
         <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-8 sm:p-12 relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-4">
-              <span className="text-xs font-bold text-amber-400 uppercase tracking-widest">
-                COMING SOON: TIKTOK LIVE & SOCIAL
-              </span>
               <h3 className="text-2xl sm:text-4xl font-extrabold font-display tracking-tight text-white">
                 Contribute Directly Inside TikTok Live & Telegram Group Chats
               </h3>
